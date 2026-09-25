@@ -1,11 +1,16 @@
-//main application router
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { CoursesPage } from "./pages/CoursesPage";
+// import { NavBar } from "./components/layout/NavBar";
+
 function App() {
-    return (
-      <main>
-        <h1>Studyflow</h1>
-        <p></p>
-      </main>
-    );
-  }
-  
-  export default App;
+  return (
+    <Router>
+      <Routes>
+        <Route path="/courses" element={<CoursesPage />} />
+        {/* Other routes: /, /login, /register */}
+      </Routes>
+    </Router>
+  );
+}
+
+export default App;
