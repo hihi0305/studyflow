@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { courseApi } from "../../services/courseApi";
+import { courseService } from "../../services/courseService";
 import { CourseCard } from "./CourseCard";
 import { CourseFormModal } from "./CourseFormModal";
 
@@ -22,7 +22,7 @@ export function CourseList() {
     setIsLoading(true);
     setError("");
     try {
-      const data = await courseApi.getCourses();
+      const data = await courseService.getCourses();
       // Handle response arrays or nested payload objects (e.g., data.courses)
       setCourses(Array.isArray(data) ? data : data.courses || []);
     } catch (err) {
@@ -53,10 +53,10 @@ export function CourseList() {
       if (editingCourse) {
         // Update existing course
         const id = editingCourse.id || editingCourse.course_id;
-        await courseApi.updateCourse(id, formData);
+        await courseService.updateCourse(id, formData);
       } else {
         // Create new course
-        await courseApi.createCourse(formData);
+        await courseService.createCourse(formData);
       }
       handleCloseModal();
       await loadCourses(); // Refresh course list
@@ -76,7 +76,7 @@ export function CourseList() {
     }
 
     try {
-      await courseApi.deleteCourse(id);
+      await courseService.deleteCourse(id);
       await loadCourses(); // Refresh course list
     } catch (err) {
       alert(err.message || "Failed to delete course.");

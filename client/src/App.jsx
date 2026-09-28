@@ -1,14 +1,21 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { NavBar } from "./components/layout/NavBar";
 import { CoursesPage } from "./pages/CoursesPage";
-// import { NavBar } from "./components/layout/NavBar";
+import { TasksPage } from "./pages/TasksPage";
 
 function App() {
   return (
     <Router>
-      <Routes>
-        <Route path="/courses" element={<CoursesPage />} />
-        {/* Other routes: /, /login, /register */}
-      </Routes>
+      <div className="min-h-screen bg-gray-50 text-gray-900">
+        <NavBar />
+        <main>
+          <Routes>
+            <Route path="/" element={<div className="p-8 text-center">Dashboard Placeholder</div>} />
+            <Route path="/courses" element={<CoursesPage />} />
+            <Route path="/tasks" element={<TasksPage />} />
+          </Routes>
+        </main>
+      </div>
     </Router>
   );
 }

@@ -40,6 +40,18 @@ export function NavBar() {
           >
             Courses
           </NavLink>
+          <NavLink
+            to="/tasks"
+            className={({ isActive }) =>
+              `flex min-h-[44px] items-center px-3 py-2 text-sm font-medium transition-colors${
+                isActive
+                  ? "font-semibold text-indigo-600 border-b-2 border-indigo-600"
+                  : "text-gray-600 hover:text-indigo-600"
+              }`
+            }
+          >
+            Tasks
+          </NavLink>
         </nav>
       </div>
     </header>

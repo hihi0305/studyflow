@@ -1,4 +1,4 @@
-const API_BASE_URL = '/api/courses';
+/*const API_BASE_URL = '/api/courses';
 
 // Helper to set headers, automatically falling back to localStorage if token isn't passed explicitly
 const getHeaders = (token) => {
@@ -56,5 +56,48 @@ export const courseService = {
       throw new Error(data.error?.message || data.message || 'Failed to delete course');
     }
     return true;
+  },
+};*/
+
+let mockCourses = [
+  {
+    id: "c1",
+    course_code: "CS 415",
+    course_name: "Software Design & Development",
+    semester: "Fall 2026",
+  },
+  {
+    id: "c2",
+    course_code: "CS 301",
+    course_name: "Data Structures & Algorithms",
+    semester: "Fall 2026",
+  },
+];
+
+export const courseService = {
+  async getCourses() {
+    // Return a copy of the mock courses list
+    return [...mockCourses];
+  },
+
+  async createCourse(courseData) {
+    const newCourse = {
+      id: `c_${Date.now()}`,
+      ...courseData,
+    };
+    mockCourses.push(newCourse);
+    return newCourse;
+  },
+
+  async updateCourse(id, courseData) {
+    mockCourses = mockCourses.map((c) =>
+      c.id === id || c.course_id === id ? { ...c, ...courseData } : c
+    );
+    return { success: true };
+  },
+
+  async deleteCourse(id) {
+    mockCourses = mockCourses.filter((c) => c.id !== id && c.course_id !== id);
+    return { success: true };
   },
 };

@@ -1,4 +1,4 @@
-export function CourseCars({ course, onEdit, onDelete }) {
+export function CourseCard({ course, onEdit, onDelete }) {
     const code = course.course_code || course.courseCode || "N/A";
     const name = course.course_name || course.courseName || "Untitled Course";
     const semester = course.semester || "Semester not specified";
@@ -24,7 +24,7 @@ export function CourseCars({ course, onEdit, onDelete }) {
                     onClick={() => onEdit(course)}
                     className="flex min-h-[44px] items-center rounded-md px-3 py-1.5 text-sm font-medium text-indigo-600 hover:bg-indigo-50 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                     >
-                        <Edit></Edit>
+                        Edit
                     </button>
                 <button
                     type="button"
