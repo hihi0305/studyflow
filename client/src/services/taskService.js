@@ -1,4 +1,4 @@
-/*const API_BASE_URL = '/api/tasks';
+const API_BASE_URL = '/api/tasks';
 
 // Helper to set headers, automatically falling back to localStorage if token isn't passed explicitly
 const getHeaders = (token) => {
@@ -57,60 +57,60 @@ export const taskService = {
     }
     return true;
   },
-};*/
+};
 
-let mockTasks = [
-  {
-    id: "t1",
-    title: "Milestone 1 Architecture Proposal",
-    description: "Write structural design and API contracts for StudyFlow.",
-    course_id: "c1",
-    course: { course_code: "CS 415", course_name: "Software Design & Development" },
-    due_date: "2026-10-15",
-    task_type: "Project",
-    priority: "High",
-    estimated_hours: 4,
-    progress: 60,
-    status: "In Progress",
-  },
-  {
-    id: "t2",
-    title: "Algorithms Problem Set 3",
-    description: "Complete graph traversal exercises.",
-    course_id: "c2",
-    course: { course_code: "CS 301", course_name: "Data Structures & Algorithms" },
-    due_date: "2026-10-02",
-    task_type: "Assignment",
-    priority: "Medium",
-    estimated_hours: 2,
-    progress: 0,
-    status: "Not Started",
-  },
-];
+/*
+import { authService } from "./authService";
+
+const getStoredTasks = () => {
+  const saved = localStorage.getItem("studyflow_tasks");
+  return saved ? JSON.parse(saved) : [];
+};
+
+const saveTasks = (tasks) => {
+  localStorage.setItem("studyflow_tasks", JSON.stringify(tasks));
+};
 
 export const taskService = {
   async getTasks() {
-    return [...mockTasks];
+    const currentUser = authService.getCurrentUser();
+    if (!currentUser) return [];
+
+    const allTasks = getStoredTasks();
+    return allTasks.filter((task) => task.userId === currentUser.id);
   },
 
   async createTask(taskData) {
+    const currentUser = authService.getCurrentUser();
+    const allTasks = getStoredTasks();
+
     const newTask = {
-      id: `t_${Date.now()}`,
       ...taskData,
+      id: Date.now(),
+      userId: currentUser?.id,
     };
-    mockTasks.push(newTask);
+
+    allTasks.push(newTask);
+    saveTasks(allTasks);
     return newTask;
   },
 
-  async updateTask(id, taskData) {
-    mockTasks = mockTasks.map((t) =>
-      t.id === id || t.task_id === id ? { ...t, ...taskData } : t
-    );
-    return { success: true };
+  async updateTask(id, updates) {
+    const allTasks = getStoredTasks();
+    const index = allTasks.findIndex((t) => t.id === id);
+    if (index !== -1) {
+      allTasks[index] = { ...allTasks[index], ...updates };
+      saveTasks(allTasks);
+      return allTasks[index];
+    }
+    throw new Error("Task not found");
   },
 
   async deleteTask(id) {
-    mockTasks = mockTasks.filter((t) => t.id !== id && t.task_id !== id);
-    return { success: true };
+    const allTasks = getStoredTasks();
+    const filtered = allTasks.filter((t) => t.id !== id);
+    saveTasks(filtered);
+    return true;
   },
 };
+*/

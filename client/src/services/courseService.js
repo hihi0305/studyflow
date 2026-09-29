@@ -1,4 +1,4 @@
-/*const API_BASE_URL = '/api/courses';
+const API_BASE_URL = '/api/courses';
 
 // Helper to set headers, automatically falling back to localStorage if token isn't passed explicitly
 const getHeaders = (token) => {
@@ -57,47 +57,61 @@ export const courseService = {
     }
     return true;
   },
-};*/
+};
 
-let mockCourses = [
-  {
-    id: "c1",
-    course_code: "CS 415",
-    course_name: "Software Design & Development",
-    semester: "Fall 2026",
-  },
-  {
-    id: "c2",
-    course_code: "CS 301",
-    course_name: "Data Structures & Algorithms",
-    semester: "Fall 2026",
-  },
-];
+/*
+//mock data to test frontend
+import { authService } from "./authService";
+
+const getStoredCourses = () => {
+  const saved = localStorage.getItem("studyflow_courses");
+  return saved ? JSON.parse(saved) : [];
+};
+
+const saveCourses = (courses) => {
+  localStorage.setItem("studyflow_courses", JSON.stringify(courses));
+};
 
 export const courseService = {
   async getCourses() {
-    // Return a copy of the mock courses list
-    return [...mockCourses];
+    const currentUser = authService.getCurrentUser();
+    if (!currentUser) return [];
+
+    const allCourses = getStoredCourses();
+    return allCourses.filter((course) => course.userId === currentUser.id);
   },
 
   async createCourse(courseData) {
+    const currentUser = authService.getCurrentUser();
+    const allCourses = getStoredCourses();
+
     const newCourse = {
-      id: `c_${Date.now()}`,
       ...courseData,
+      id: Date.now(),
+      userId: currentUser?.id,
     };
-    mockCourses.push(newCourse);
+
+    allCourses.push(newCourse);
+    saveCourses(allCourses);
     return newCourse;
   },
 
-  async updateCourse(id, courseData) {
-    mockCourses = mockCourses.map((c) =>
-      c.id === id || c.course_id === id ? { ...c, ...courseData } : c
-    );
-    return { success: true };
+  async updateCourse(id, updates) {
+    const allCourses = getStoredCourses();
+    const index = allCourses.findIndex((c) => c.id === id);
+    if (index !== -1) {
+      allCourses[index] = { ...allCourses[index], ...updates };
+      saveCourses(allCourses);
+      return allCourses[index];
+    }
+    throw new Error("Course not found");
   },
 
   async deleteCourse(id) {
-    mockCourses = mockCourses.filter((c) => c.id !== id && c.course_id !== id);
-    return { success: true };
+    const allCourses = getStoredCourses();
+    const filtered = allCourses.filter((c) => c.id !== id);
+    saveCourses(filtered);
+    return true;
   },
 };
+*/
