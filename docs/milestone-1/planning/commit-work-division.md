@@ -8,6 +8,33 @@ The original planning spreadsheet is preserved in this repository. This Markdown
 
 The assignments below represent the initial planning stage. Actual contributions will be documented through GitHub Issues, commits, Pull Requests, reviews, and completed project artifacts.
 
+## Milestone 1 Scope Clarification
+
+The Milestone 1 implementation plan focuses on the required working end-to-end MVP and repository reproducibility requirements.
+
+The core implementation scope remains:
+
+- User registration and authentication
+- Course CRUD
+- Academic Task CRUD
+- Progress and status tracking
+- Basic dashboard
+- Persistent PostgreSQL storage
+- User-specific data access
+- Frontend/backend integration
+- Testing and bug fixing
+- Setup, run, and verification documentation
+
+The following features are deferred beyond Milestone 1 and are not part of the current implementation commitment:
+
+- Task Attention Level
+- Advanced search and filtering
+- Workload analytics or recommendations
+- Calendar or timeline features
+- Notifications
+- External integrations
+- AI-assisted features
+
 ## Development Work Division
 
 | Development Area | Eunjoo Jung | Errin James | Shared |
@@ -17,17 +44,17 @@ The assignments below represent the initial planning stage. Actual contributions
 | Course Management | Course model, CRUD API, ownership validation | Course list, create/edit/delete UI | Integration and bug fixing |
 | Task Management | Task model, CRUD API, validation, course association | Task form, edit/delete UI, task fields | Integration and workflow verification |
 | Progress / Status | Backend progress/status logic | Progress/status controls and display | End-to-end verification |
-| Dashboard | Dashboard API/query/data handling | Dashboard layout, task display, responsive UI | Integration and final behavior checks |
-| Database | PostgreSQL schema, migrations, relationships | Review and frontend data requirements | Schema review |
+| Dashboard | Provide user-specific task data and required dashboard API/query support | Implement the basic dashboard layout and display active task information, progress, and status | Integrate and verify the basic dashboard workflow |
+| Database | Define PostgreSQL schema, relationships, migrations, and seed/sample-data support when applicable | Review frontend data requirements | Verify schema, migration, and sample-data requirements for local setup |
 | API Contract | Define/update REST endpoints | Verify frontend requirements | Agree on request/response structure |
 | Backend Testing | API/auth/database tests | Review when needed | Integration test planning |
 | Frontend Testing | Support if API mocks/data needed | UI/component/interaction tests | End-to-end test cases |
 | Bug Fixes | Backend/data/API fixes | Frontend/UI fixes | Integration bugs |
-| Documentation | Backend/database/API documentation | Frontend/UI documentation | README, milestone report, final setup instructions |
+| Documentation | Document backend/database setup, environment variables, migrations, and API requirements | Document frontend setup and usage requirements | Maintain README/setup instructions, required software and versions, dependency installation, safe `.env.example`, and verification instructions |
 | Screenshots / Evidence | Backend/API evidence where needed | UI screenshots | Final report evidence |
 | Pull Request Review | Review Errin's PRs | Review Eunjoo's PRs | Major integration decisions |
-| Final Integration | Backend fixes and verification | Frontend fixes and verification | Final runnable MVP |
-| Milestone Tag / Final Check | Participate | Participate | Confirm final commit and `milestone-1` tag |
+| Final Integration | Resolve backend/database integration issues | Resolve frontend integration issues | Verify the complete MVP from a clean local setup and confirm the main end-to-end workflow |
+| Milestone Tag / Final Check | Verify backend/database readiness | Verify frontend readiness | Confirm the exact submitted M1 version, repository setup instructions, TA verification steps, and create the `milestone-1` tag |
 
 ## Shared Work Clarification
 
