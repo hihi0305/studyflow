@@ -1,20 +1,13 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { authService } from "../../services/authService";
+import { useAuth } from "../context/AuthContext"; // Import global auth hook
 
 export function NavBar() {
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    // Check if user is logged in
-    const currentUser = authService.getCurrentUser();
-    setUser(currentUser);
-  }, []);
+  // Consume global state and methods directly from AuthContext
+  const { user, isAuthenticated, logout } = useAuth();
 
   const handleLogout = () => {
-    authService.logout();
-    setUser(null);
+    logout();
     navigate("/login");
   };
 
@@ -25,25 +18,23 @@ export function NavBar() {
           <Link to="/" className="text-xl font-bold text-indigo-600">
             StudyFlow
           </Link>
-          <nav className="flex gap-4 text-sm font-medium text-gray-600">
-            <Link to="/dashboard" className="hover:text-indigo-600">
-              Dashboard
-            </Link>
-            <Link to="/tasks" className="hover:text-indigo-600">
-              Tasks
-            </Link>
-            <Link to="/courses" className="hover:text-indigo-600">
-              Courses
-            </Link>
-          </nav>
+
+          {/* Protected Links: Dynamically shown/hidden via isAuthenticated */}
+          {isAuthenticated && (
+            <nav className="flex gap-4 text-sm font-medium text-gray-600">
+              <Link to="/dashboard" className="hover:text-indigo-600">Dashboard</Link>
+              <Link to="/tasks" className="hover:text-indigo-600">Tasks</Link>
+              <Link to="/courses" className="hover:text-indigo-600">Courses</Link>
+            </nav>
+          )}
         </div>
 
-        {/* User Auth Action */}
+        {/* User Auth Action Controls */}
         <div className="flex items-center gap-4">
-          {user ? (
+          {isAuthenticated ? (
             <div className="flex items-center gap-3">
               <span className="text-xs text-gray-500">
-                Hi, <strong className="text-gray-700">{user.name || user.email || "Student"}</strong>
+                Hi, <strong className="text-gray-700">{user?.name || user?.email || "Student"}</strong>
               </span>
               <button
                 onClick={handleLogout}

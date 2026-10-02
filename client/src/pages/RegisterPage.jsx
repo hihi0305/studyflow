@@ -21,24 +21,12 @@ export function RegisterPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
-
-    // Validate password match
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match.");
-      return;
-    }
-
-    setLoading(true);
-
+    setError('');
     try {
-      await authService.register(formData.name, formData.email, formData.password);
-      // Redirect to dashboard and refresh so NavBar updates auth state
-      window.location.href = "/dashboard";
+      await register({ name, email, password });
+      navigate('/login', { state: { message: 'Account created! Please sign in.' } });
     } catch (err) {
-      setError(err.message || "Failed to create account. Please try again.");
-    } finally {
-      setLoading(false);
+      setError(err.message || 'Registration failed');
     }
   };
 

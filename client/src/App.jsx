@@ -3,28 +3,24 @@ import { NavBar } from "./components/layout/NavBar";
 import { TasksPage } from "./pages/TasksPage";
 import { CoursesPage } from "./pages/CoursesPage";
 import { DashboardPage } from "./pages/DashboardPage";
-import  LoginPage  from "./pages/LoginPage";
-import  RegisterPage  from "./pages/RegisterPage";
+import { LoginPage } from "./pages/LoginPage";
+import { RegisterPage } from "./pages/RegisterPage";
 
-function App() {
+export default function App() {
   return (
-    <Router>
-      <div className="min-h-screen bg-gray-50 text-gray-900">
-        <NavBar />
-        <main>
-          <Routes>
-            <Route path="/" element={<DashboardPage />} />
-            <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/tasks" element={<TasksPage />} />
-            <Route path="/courses" element={<CoursesPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </main>
-      </div>
-    </Router>
+    <>
+      <NavBar />
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+
+        {/* Protected Routes */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/courses" element={<CoursesPage />} />
+          <Route path="/tasks" element={<TasksPage />} />
+        </Route>
+      </Routes>
+    </>
   );
 }
-
-export default App;
