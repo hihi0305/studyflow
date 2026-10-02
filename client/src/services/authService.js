@@ -1,23 +1,14 @@
 const API_BASE_URL = '/api';
-const TOKEN_KEY = 'auth_token';
+const TOKEN_KEY = 'studyflow_access_token';
 
 export const authService = {
   getToken: () => localStorage.getItem(TOKEN_KEY),
   setToken: (token) => localStorage.setItem(TOKEN_KEY, token),
   removeToken: () => localStorage.removeItem(TOKEN_KEY),
-  
-  getCurrentUser: () => {
-    const user = localStorage.getItem('user');
-    return user ? JSON.parse(user) : null;
-  },
 
-  logout() {
-    this.removeToken();
-  },
-
-  async register(userData) {
+  async register(userData) { // Expects object: { name, email, password }
     const response = await fetch(`${API_BASE_URL}/auth/register`, {
-      method: "POST",
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(userData),
     });
@@ -26,17 +17,12 @@ export const authService = {
     if (!response.ok) {
       throw new Error(data.error?.message || 'Registration failed');
     }
-
-    if(data.token) {
-      this.setToken(data.token);
-    }
-
-    return data;
+    return data; // Returns { user }
   },
 
-  async login(credentials) {
+  async login(credentials) { // Expects object: { email, password }
     const response = await fetch(`${API_BASE_URL}/auth/login`, {
-      method: "POST",
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(credentials),
     });
@@ -46,10 +32,32 @@ export const authService = {
       throw new Error(data.error?.message || 'Invalid email or password.');
     }
 
-    if(data.token) {
-      this.setToken(data.token);
+    if (data.accessToken) {
+      this.setToken(data.accessToken);
     }
-    return data;
+    return data; // Returns { user, accessToken }
+  },
+
+  async getCurrentUser() {
+    const token = this.getToken();
+    if (!token) return null;
+
+    const response = await fetch(`${API_BASE_URL}/auth/me`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      this.removeToken();
+      return null;
+    }
+    const data = await response.json();
+    return data.user;
+  },
+
+  logout() {
+    this.removeToken();
   },
 };
-

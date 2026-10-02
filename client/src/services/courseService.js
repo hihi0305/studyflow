@@ -1,8 +1,8 @@
-import { data } from 'react-router-dom';
 import { authService } from './authService';
-const API_BASE_URL = '/api/courses';
 
-// Helper to set headers, automatically falling back to localStorage if token isn't passed explicitly
+const API_BASE_URL = '/api';
+
+// Helper to set headers using standardized auth token
 const getAuthHeaders = () => {
   const token = authService.getToken();
   return {
@@ -15,15 +15,18 @@ export const courseService = {
   // GET /api/courses - Fetch all courses
   async getCourses() {
     const response = await fetch(`${API_BASE_URL}/courses`, {
-        method: 'GET',
-        headers: getAuthHeaders(),
+      method: 'GET',
+      headers: getAuthHeaders(),
     });
+
     const data = await response.json();
-    if (!response.ok) throw new Error(data.error?.message || 'Failed to fetch courses');
+    if (!response.ok) {
+      throw new Error(data.error?.message || 'Failed to fetch courses');
+    }
     return data;
   },
 
-  // POST /api/courses - Create a course
+  // POST /api/courses - Create a new course
   async createCourse(courseData) {
     const response = await fetch(`${API_BASE_URL}/courses`, {
       method: 'POST',
@@ -32,11 +35,13 @@ export const courseService = {
     });
 
     const data = await response.json();
-    if (!res.ok) throw new Error(data.error?.message || 'Failed to create course');
+    if (!response.ok) {
+      throw new Error(data.error?.message || 'Failed to create course');
+    }
     return data;
   },
 
-  // PUT /api/courses/:id - Update a course by ID
+  // PUT /api/courses/:id - Update an existing course
   async updateCourse(courseId, updates) {
     const response = await fetch(`${API_BASE_URL}/courses/${courseId}`, {
       method: 'PUT',
@@ -44,8 +49,10 @@ export const courseService = {
       body: JSON.stringify(updates),
     });
 
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error?.message || 'Failed to update course');
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.error?.message || 'Failed to update course');
+    }
     return data;
   },
 
@@ -55,9 +62,9 @@ export const courseService = {
       method: 'DELETE',
       headers: getAuthHeaders(),
     });
-    
+
+    const data = await response.json().catch(() => ({}));
     if (!response.ok) {
-      const data = await res.json().catch(() => ({}));
       throw new Error(data.error?.message || 'Failed to delete course');
     }
     return data;

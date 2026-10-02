@@ -23,10 +23,10 @@ export function RegisterPage() {
     e.preventDefault();
     setError('');
     try {
-      await authService.login({ email, password });
-      navigate('/dashboard'); // Token is saved automatically in authService
+      await register({ name, email, password });
+      navigate('/login', { state: { message: 'Account created! Please sign in.' } });
     } catch (err) {
-      setError(err.message || 'Invalid email or password');
+      setError(err.message || 'Registration failed');
     }
   };
 

@@ -22,10 +22,11 @@ export function LoginPage() {
     e.preventDefault();
     setError('');
     try {
-      await authService.login({ email, password });
-      navigate('/dashboard'); // Token is saved automatically in authService
+      // Passes single credentials object
+      await login({ email, password });
+      navigate('/dashboard');
     } catch (err) {
-      setError(err.message || 'Invalid email or password');
+      setError(err.message || 'Login failed');
     }
   };
 
