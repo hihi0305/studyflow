@@ -22,71 +22,95 @@ export function DashboardPage() {
   }, []);
 
   if (loading) {
-    return <div className="p-8 text-center text-gray-500">Loading dashboard...</div>;
+    return (
+      <div className="flex min-h-[50vh] items-center justify-center">
+        <p className="text-sm font-medium text-gray-500">Loading academic dashboard...</p>
+      </div>
+    );
   }
 
   if (error) {
-    return <div className="p-8 text-center text-red-600">{error}</div>;
+    return (
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <div className="rounded-md bg-red-50 p-4 border border-red-200">
+          <p className="text-sm font-medium text-red-800">{error}</p>
+        </div>
+      </div>
+    );
   }
+
+  const totalCourses = summary?.courseCount ?? summary?.totalCourses ?? summary?.courses?.length ?? 0;
+  const totalTasks = summary?.taskCount ?? summary?.totalTasks ?? summary?.tasks?.length ?? 0;
+  const completedTasks = summary?.completedTaskCount ?? summary?.completedTasks ?? 0;
+  const upcomingTasks = summary?.upcomingTasks ?? summary?.tasks ?? [];
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-      <h1 className="text-2xl font-bold text-gray-900 mb-6">Academic Dashboard</h1>
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">Academic Dashboard</h1>
+        <p className="mt-1 text-sm text-gray-500">
+          Overview of your enrolled courses and upcoming task deadlines.
+        </p>
+      </div>
 
-      {/* Key MVP Metric Cards */}
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 mb-8">
-        <div className="rounded-lg bg-white p-6 shadow-sm border border-gray-200">
-          <p className="text-sm font-medium text-gray-500">Enrolled Courses</p>
-          <p className="mt-2 text-3xl font-bold text-indigo-600">
-            {summary?.courseCount ?? summary?.courses?.length ?? 0}
-          </p>
+      <div className="mb-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="overflow-hidden rounded-lg bg-white p-6 shadow-sm border border-gray-200">
+          <dt className="truncate text-sm font-medium text-gray-500">Enrolled Courses</dt>
+          <dd className="mt-2 text-3xl font-bold tracking-tight text-indigo-600">
+            {totalCourses}
+          </dd>
         </div>
 
-        <div className="rounded-lg bg-white p-6 shadow-sm border border-gray-200">
-          <p className="text-sm font-medium text-gray-500">Total Tasks</p>
-          <p className="mt-2 text-3xl font-bold text-indigo-600">
-            {summary?.taskCount ?? summary?.tasks?.length ?? 0}
-          </p>
+        <div className="overflow-hidden rounded-lg bg-white p-6 shadow-sm border border-gray-200">
+          <dt className="truncate text-sm font-medium text-gray-500">Total Tasks</dt>
+          <dd className="mt-2 text-3xl font-bold tracking-tight text-indigo-600">
+            {totalTasks}
+          </dd>
         </div>
 
-        <div className="rounded-lg bg-white p-6 shadow-sm border border-gray-200">
-          <p className="text-sm font-medium text-gray-500">Completed Tasks</p>
-          <p className="mt-2 text-3xl font-bold text-green-600">
-            {summary?.completedTaskCount ?? 0}
-          </p>
+        <div className="overflow-hidden rounded-lg bg-white p-6 shadow-sm border border-gray-200">
+          <dt className="truncate text-sm font-medium text-gray-500">Completed Tasks</dt>
+          <dd className="mt-2 text-3xl font-bold tracking-tight text-green-600">
+            {completedTasks}
+          </dd>
         </div>
       </div>
 
-      {/* Simple Upcoming Tasks List */}
-      <div className="rounded-lg bg-white p-6 shadow-sm border border-gray-200">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Upcoming Tasks</h2>
-        {summary?.upcomingTasks && summary.upcomingTasks.length > 0 ? (
-          <ul className="divide-y divide-gray-200">
-            {summary.upcomingTasks.map((task) => (
-              <li key={task.id} className="py-3 flex justify-between items-center">
-                <div>
-                  <p className="text-sm font-medium text-gray-800">{task.title}</p>
-                  {task.dueDate && (
-                    <p className="text-xs text-gray-500">
-                      Due: {new Date(task.dueDate).toLocaleDateString()}
-                    </p>
-                  )}
-                </div>
-                <span
-                  className={`px-2 py-1 text-xs font-medium rounded-md ${
-                    task.completed
-                      ? 'bg-green-100 text-green-800'
-                      : 'bg-gray-100 text-gray-700'
-                  }`}
-                >
-                  {task.completed ? 'Completed' : 'Pending'}
-                </span>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="text-sm text-gray-500">No upcoming tasks found.</p>
-        )}
+      <div className="rounded-lg bg-white shadow-sm border border-gray-200">
+        <div className="border-b border-gray-200 px-6 py-4">
+          <h2 className="text-lg font-semibold text-gray-900">Upcoming Deadlines</h2>
+        </div>
+
+        <div className="p-6">
+          {upcomingTasks.length > 0 ? (
+            <ul className="divide-y divide-gray-200">
+              {upcomingTasks.map((task) => (
+                <li key={task.id || task._id} className="flex items-center justify-between py-3">
+                  <div>
+                    <p className="text-sm font-medium text-gray-900">{task.title}</p>
+                    {task.dueDate && (
+                      <p className="text-xs text-gray-500">
+                        Due: {new Date(task.dueDate).toLocaleDateString()}
+                      </p>
+                    )}
+                  </div>
+
+                  <span
+                    className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                      task.completed
+                        ? 'bg-green-100 text-green-800'
+                        : 'bg-gray-100 text-gray-700'
+                    }`}
+                  >
+                    {task.completed ? 'Completed' : 'Pending'}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-sm text-gray-500">No upcoming tasks found.</p>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -2,7 +2,6 @@ import { authService } from './authService';
 
 const API_BASE_URL = '/api';
 
-// Helper to set headers using standardized auth token
 const getAuthHeaders = () => {
   const token = authService.getToken();
   return {
@@ -12,7 +11,6 @@ const getAuthHeaders = () => {
 };
 
 export const courseService = {
-  // GET /api/courses - Fetch all courses
   async getCourses() {
     const response = await fetch(`${API_BASE_URL}/courses`, {
       method: 'GET',
@@ -26,7 +24,6 @@ export const courseService = {
     return data;
   },
 
-  // POST /api/courses - Create a new course
   async createCourse(courseData) {
     const response = await fetch(`${API_BASE_URL}/courses`, {
       method: 'POST',
@@ -41,7 +38,6 @@ export const courseService = {
     return data;
   },
 
-  // PUT /api/courses/:id - Update an existing course
   async updateCourse(courseId, updates) {
     const response = await fetch(`${API_BASE_URL}/courses/${courseId}`, {
       method: 'PUT',
@@ -56,17 +52,21 @@ export const courseService = {
     return data;
   },
 
-  // DELETE /api/courses/:id - Delete a course by ID
   async deleteCourse(courseId) {
     const response = await fetch(`${API_BASE_URL}/courses/${courseId}`, {
       method: 'DELETE',
       headers: getAuthHeaders(),
     });
 
-    const data = await response.json().catch(() => ({}));
     if (!response.ok) {
+      const data = await response.json().catch(() => ({}));
       throw new Error(data.error?.message || 'Failed to delete course');
     }
-    return data;
+
+    if (response.status === 204) {
+      return { success: true };
+    }
+
+    return await response.json();
   },
 };

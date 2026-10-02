@@ -1,7 +1,10 @@
 import { Navigate, Outlet } from 'react-router-dom';
-import { authService } from '../services/authService';
+import { useAuth } from '../context/AuthContext';
 
 export const ProtectedRoute = () => {
-    const token = authService.getToken();
-    return token ? <Outlet /> : <Navigate to="/login" replace />;
+  const { isAuthenticated, loading } = useAuth();
+
+  if (loading) return null;
+
+  return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;
 };

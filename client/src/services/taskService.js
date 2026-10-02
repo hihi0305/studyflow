@@ -2,7 +2,6 @@ import { authService } from './authService';
 
 const API_BASE_URL = '/api';
 
-// Helper to set headers using standardized auth token
 const getAuthHeaders = () => {
   const token = authService.getToken();
   return {
@@ -12,7 +11,6 @@ const getAuthHeaders = () => {
 };
 
 export const taskService = {
-  // GET /api/tasks - Fetch all tasks for the logged-in user
   async getTasks() {
     const response = await fetch(`${API_BASE_URL}/tasks`, {
       method: 'GET',
@@ -26,7 +24,6 @@ export const taskService = {
     return data;
   },
 
-  // POST /api/tasks - Create a new task
   async createTask(taskData) {
     const response = await fetch(`${API_BASE_URL}/tasks`, {
       method: 'POST',
@@ -41,7 +38,6 @@ export const taskService = {
     return data;
   },
 
-  // PUT /api/tasks/:id - Update an existing task
   async updateTask(taskId, updates) {
     const response = await fetch(`${API_BASE_URL}/tasks/${taskId}`, {
       method: 'PUT',
@@ -56,18 +52,21 @@ export const taskService = {
     return data;
   },
 
-  // DELETE /api/tasks/:id - Delete a task by ID
   async deleteTask(taskId) {
     const response = await fetch(`${API_BASE_URL}/tasks/${taskId}`, {
       method: 'DELETE',
       headers: getAuthHeaders(),
     });
 
-    const data = await response.json();
     if (!response.ok) {
-      throw new Error(data.error?.message || 'Failed to delete task');
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.error?.message || 'Failed to delete task');
     }
-    return data;
+
+    if (response.status === 204) {
+      return { success: true };
+    }
+
+    return await response.json();
   },
 };
-

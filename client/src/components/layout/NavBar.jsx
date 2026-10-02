@@ -1,14 +1,13 @@
-import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext"; // Import global auth hook
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 export function NavBar() {
   const navigate = useNavigate();
-  // Consume global state and methods directly from AuthContext
   const { user, isAuthenticated, logout } = useAuth();
 
   const handleLogout = () => {
     logout();
-    navigate("/login");
+    navigate('/login');
   };
 
   return (
@@ -19,7 +18,6 @@ export function NavBar() {
             StudyFlow
           </Link>
 
-          {/* Protected Links: Dynamically shown/hidden via isAuthenticated */}
           {isAuthenticated && (
             <nav className="flex gap-4 text-sm font-medium text-gray-600">
               <Link to="/dashboard" className="hover:text-indigo-600">Dashboard</Link>
@@ -29,12 +27,11 @@ export function NavBar() {
           )}
         </div>
 
-        {/* User Auth Action Controls */}
         <div className="flex items-center gap-4">
           {isAuthenticated ? (
             <div className="flex items-center gap-3">
               <span className="text-xs text-gray-500">
-                Hi, <strong className="text-gray-700">{user?.name || user?.email || "Student"}</strong>
+                Hi, <strong className="text-gray-700">{user?.name || user?.email || 'Student'}</strong>
               </span>
               <button
                 onClick={handleLogout}
