@@ -23,7 +23,7 @@ export function LoginPage() {
     setError('');
     try {
       // Passes single credentials object
-      await login({ email, password });
+      authService.login({ email, password });
       navigate('/dashboard');
     } catch (err) {
       setError(err.message || 'Login failed');
