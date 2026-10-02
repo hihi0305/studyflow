@@ -20,17 +20,12 @@ export function LoginPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
-    setLoading(true);
-
+    setError('');
     try {
-      await authService.login(formData.email, formData.password);
-      // Redirect to dashboard and refresh so NavBar updates auth state
-      window.location.href = "/dashboard";
+      await authService.login({ email, password });
+      navigate('/dashboard'); // Token is saved automatically in authService
     } catch (err) {
-      setError(err.message || "Failed to log in. Please check your credentials.");
-    } finally {
-      setLoading(false);
+      setError(err.message || 'Invalid email or password');
     }
   };
 
