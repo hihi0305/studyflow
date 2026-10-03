@@ -131,7 +131,7 @@ export function TaskCard({ task, onEdit, onDelete }) {
           </button>
           <button
             type="button"
-            onClick={() => onDelete(id || task.task_id)}
+            onClick={() => onDelete(task)}
             className="rounded-md px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 min-h-[44px]"
           >
             Delete
