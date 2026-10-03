@@ -11,10 +11,14 @@ router.get("/", async (req, res) => {
   try {
     const result = await pool.query(
       `
-        SELECT id, name, created_at, updated_at
-        FROM courses
-        WHERE user_id = $1
-        ORDER BY created_at DESC
+        SELECT
+		  id,
+		  course_number AS "courseNumber",
+		  created_at AS "createdAt",
+		  updated_at AS "updatedAt"
+		FROM courses
+		WHERE user_id = $1
+		ORDER BY created_at DESC
       `,
       [req.userId]
     );
@@ -34,21 +38,25 @@ router.get("/", async (req, res) => {
 // POST /api/courses
 router.post("/", async (req, res) => {
   try {
-    const { name } = req.body;
+    const { courseNumber } = req.body;
 
-    if (!name || !name.trim()) {
+    if (!courseNumber || !courseNumber.trim()) {
       return res.status(400).json({
-        error: { message: "Course name is required." },
+        error: { message: "Course Number is required." },
       });
     }
 
     const result = await pool.query(
       `
-        INSERT INTO courses (user_id, name)
-        VALUES ($1, $2)
-        RETURNING id, name, created_at, updated_at
+        INSERT INTO courses (user_id, course_number)
+		VALUES ($1, $2)
+		RETURNING
+		  id,
+		  course_number AS "courseNumber",
+		  created_at AS "createdAt",
+		  updated_at AS "updatedAt"
       `,
-      [req.userId, name.trim()]
+      [req.userId, courseNumber.trim()]
     );
 
     return res.status(201).json({
@@ -67,7 +75,7 @@ router.post("/", async (req, res) => {
 router.put("/:id", async (req, res) => {
   try {
     const courseId = Number(req.params.id);
-    const { name } = req.body;
+    const { courseNumber } = req.body;
 
     if (!Number.isInteger(courseId) || courseId <= 0) {
       return res.status(400).json({
@@ -75,22 +83,26 @@ router.put("/:id", async (req, res) => {
       });
     }
 
-    if (!name || !name.trim()) {
+    if (!courseNumber || !courseNumber.trim()) {
       return res.status(400).json({
-        error: { message: "Course name is required." },
+        error: { message: "Course Number is required." },
       });
     }
 
     const result = await pool.query(
       `
         UPDATE courses
-        SET name = $1,
-            updated_at = CURRENT_TIMESTAMP
-        WHERE id = $2
-          AND user_id = $3
-        RETURNING id, name, created_at, updated_at
+		SET course_number = $1,
+			updated_at = CURRENT_TIMESTAMP
+		WHERE id = $2
+		  AND user_id = $3
+		RETURNING
+		  id,
+		  course_number AS "courseNumber",
+		  created_at AS "createdAt",
+		  updated_at AS "updatedAt"
       `,
-      [name.trim(), courseId, req.userId]
+      [courseNumber.trim(), courseId, req.userId]
     );
 
     if (result.rows.length === 0) {

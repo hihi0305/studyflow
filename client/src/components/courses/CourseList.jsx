@@ -12,6 +12,7 @@ export function CourseList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingCourse, setEditingCourse] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [courseToDelete, setCourseToDelete] = useState(null);
 
   // Load courses on component mount
   useEffect(() => {
@@ -67,17 +68,19 @@ export function CourseList() {
     }
   };
 
-  const handleDeleteCourse = async (course) => {
-    const id = course.id || course.course_id;
-    const name = course.course_name || course.courseName || "this course";
+  const handleDeleteCourse = (course) => {
+    setCourseToDelete(course);
+  };
 
-    if (!window.confirm(`Are you sure you want to delete "${name}"?`)) {
-      return;
-    }
+  const confirmDeleteCourse = async () => {
+	if (!courseToDelete) return;
 
-    try {
+	const id = courseToDelete.id || courseToDelete.course_id;
+
+	try {
       await courseService.deleteCourse(id);
-      await loadCourses(); // Refresh course list
+      setCourseToDelete(null);
+      await loadCourses();
     } catch (err) {
       alert(err.message || "Failed to delete course.");
     }
@@ -151,6 +154,43 @@ export function CourseList() {
         initialData={editingCourse}
         isLoading={isSubmitting}
       />
+
+	  {/* Delete Confirmation Modal */}
+	  {courseToDelete && (
+		<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+		  <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-xl">
+			<div className="border-b pb-3">
+			  <h2 className="text-xl font-bold text-gray-900">
+				Delete Course
+			  </h2>
+			</div>
+
+			<p className="mt-4 text-sm text-gray-700">
+			  Are you sure you want to delete{" "}
+			  <strong>{courseToDelete.courseNumber}</strong>?
+			</p>
+
+			<div className="mt-6 flex justify-end gap-3 border-t pt-4">
+			  <button
+				type="button"
+				onClick={() => setCourseToDelete(null)}
+				className="min-h-[44px] rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+			  >
+				Cancel
+			  </button>
+
+			  <button
+				type="button"
+				onClick={confirmDeleteCourse}
+				className="min-h-[44px] rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
+			  >
+				Delete Course
+			  </button>
+			</div>
+		  </div>
+		</div>
+	  )}
+
     </div>
   );
 }
