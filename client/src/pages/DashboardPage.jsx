@@ -39,10 +39,10 @@ export function DashboardPage() {
     );
   }
 
-  const totalCourses = summary?.courseCount ?? summary?.totalCourses ?? summary?.courses?.length ?? 0;
-  const totalTasks = summary?.taskCount ?? summary?.totalTasks ?? summary?.tasks?.length ?? 0;
-  const completedTasks = summary?.completedTaskCount ?? summary?.completedTasks ?? 0;
-  const upcomingTasks = summary?.upcomingTasks ?? summary?.tasks ?? [];
+  const totalTasks = summary?.summary?.totalTasks ?? 0;
+  const activeTasks = summary?.summary?.activeTasks ?? 0;
+  const completedTasks = summary?.summary?.completedTasks ?? 0;
+  const tasks = summary?.tasks ?? [];
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -55,9 +55,9 @@ export function DashboardPage() {
 
       <div className="mb-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
         <div className="overflow-hidden rounded-lg bg-white p-6 shadow-sm border border-gray-200">
-          <dt className="truncate text-sm font-medium text-gray-500">Enrolled Courses</dt>
+          <dt className="truncate text-sm font-medium text-gray-500">Active Tasks</dt>
           <dd className="mt-2 text-3xl font-bold tracking-tight text-indigo-600">
-            {totalCourses}
+            {activeTasks}
           </dd>
         </div>
 
@@ -78,13 +78,13 @@ export function DashboardPage() {
 
       <div className="rounded-lg bg-white shadow-sm border border-gray-200">
         <div className="border-b border-gray-200 px-6 py-4">
-          <h2 className="text-lg font-semibold text-gray-900">Upcoming Deadlines</h2>
+          <h2 className="text-lg font-semibold text-gray-900">Your Tasks</h2>
         </div>
 
         <div className="p-6">
-          {upcomingTasks.length > 0 ? (
+          {tasks.length > 0 ? (
             <ul className="divide-y divide-gray-200">
-              {upcomingTasks.map((task) => (
+              {tasks.map((task) => (
                 <li key={task.id || task._id} className="flex items-center justify-between py-3">
                   <div>
                     <p className="text-sm font-medium text-gray-900">{task.title}</p>
@@ -97,12 +97,12 @@ export function DashboardPage() {
 
                   <span
                     className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                      task.completed
+                      task.status === "Completed"
                         ? 'bg-green-100 text-green-800'
                         : 'bg-gray-100 text-gray-700'
                     }`}
                   >
-                    {task.completed ? 'Completed' : 'Pending'}
+                    {task.status}
                   </span>
                 </li>
               ))}

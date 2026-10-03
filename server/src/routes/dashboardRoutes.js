@@ -19,7 +19,7 @@ router.get("/", async (req, res) => {
           t.progress,
           t.status,
           t.course_id AS "courseId",
-          c.name AS "courseName"
+          c.course_number AS "courseName"
         FROM academic_tasks t
         LEFT JOIN courses c
           ON t.course_id = c.id

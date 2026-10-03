@@ -1,10 +1,11 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { NavBar } from "./components/layout/NavBar";
 import { TasksPage } from "./pages/TasksPage";
 import { CoursesPage } from "./pages/CoursesPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { LoginPage } from "./pages/LoginPage";
 import { RegisterPage } from "./pages/RegisterPage";
+import { ProtectedRoute } from "./components/layout/ProtectedRoute";
 
 export default function App() {
   return (
