@@ -5,6 +5,7 @@ export function TaskCard({ task, onEdit, onDelete }) {
       title,
       description,
       course,
+	  courseNumber,
       due_date,
       dueDate,
       task_type,
@@ -16,7 +17,8 @@ export function TaskCard({ task, onEdit, onDelete }) {
       status = "Not Started",
     } = task;
   
-    const displayDueDate = due_date || dueDate;
+    const displayCourseNumber = courseNumber || course?.courseNumber || "";
+	const displayDueDate = due_date || dueDate;
     const displayTaskType = task_type || taskType || "Assignment";
     const displayHours = estimated_hours || estimatedHours;
   
@@ -81,9 +83,9 @@ export function TaskCard({ task, onEdit, onDelete }) {
   
           {/* Course & Metadata Info */}
           <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-600">
-            {course && (
+            {displayCourseNumber && (
               <span className="font-semibold text-gray-800">
-                📖 {course.course_code || course.courseCode || course.name || "Course"}
+                📖 {displayCourseNumber}
               </span>
             )}
             <span>📅 Due: {formatDate(displayDueDate)}</span>

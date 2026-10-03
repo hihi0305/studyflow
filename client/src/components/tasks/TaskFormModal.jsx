@@ -30,7 +30,7 @@ export function TaskFormModal({ isOpen, onClose, onSubmit, initialData = null, i
         title: initialData.title || "",
         description: initialData.description || "",
         course_id: initialData.course_id || initialData.courseId || "",
-        due_date: initialData.due_date ? initialData.due_date.substring(0, 10) : "",
+        due_date: (initialData.dueDate || initialData.due_date)?.substring(0, 10) || "",
         task_type: initialData.task_type || initialData.taskType || "Assignment",
         priority: initialData.priority || "Medium",
         estimated_hours: initialData.estimated_hours || initialData.estimatedHours || 1,
@@ -63,7 +63,7 @@ export function TaskFormModal({ isOpen, onClose, onSubmit, initialData = null, i
       if (!initialData && courseList.length > 0 && !formData.course_id) {
         setFormData((prev) => ({
           ...prev,
-          course_id: courseList.id || courseList.course_id,
+          course_id: courseList[0].id,
         }));
       }
     } catch (err) {
@@ -89,7 +89,24 @@ export function TaskFormModal({ isOpen, onClose, onSubmit, initialData = null, i
       setError("Due date is required.");
       return;
     }
-    onSubmit(formData);
+
+	const payload = {
+    title: formData.title.trim(),
+    description: formData.description.trim(),
+    courseId: formData.course_id
+      ? Number(formData.course_id)
+      : null,
+    dueDate: formData.due_date,
+    taskType: formData.task_type,
+    priority: formData.priority,
+    estimatedHours: formData.estimated_hours
+      ? Number(formData.estimated_hours)
+      : null,
+    progress: Number(formData.progress),
+    status: formData.status,
+  };
+
+    onSubmit(payload);
   };
 
   if (!isOpen) return null;
@@ -149,8 +166,8 @@ export function TaskFormModal({ isOpen, onClose, onSubmit, initialData = null, i
               >
                 <option value="">-- Select Course --</option>
                 {courses.map((course) => {
-                  const id = course.id || course.course_id;
-                  const label = `${course.course_code || course.courseCode} - ${course.course_name || course.courseName}`;
+                  const id = course.id;
+                  const label = course.courseNumber;
                   return (
                     <option key={id} value={id}>
                       {label}

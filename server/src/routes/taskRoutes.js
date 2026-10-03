@@ -56,21 +56,25 @@ router.get("/", async (req, res) => {
     const result = await pool.query(
       `
         SELECT
-          id,
-          course_id AS "courseId",
-          title,
-          description,
-          due_date AS "dueDate",
-          task_type AS "taskType",
-          priority,
-          estimated_hours AS "estimatedHours",
-          progress,
-          status,
-          created_at AS "createdAt",
-          updated_at AS "updatedAt"
-        FROM academic_tasks
-        WHERE user_id = $1
-        ORDER BY due_date ASC
+          t.id,
+          t.course_id AS "courseId",
+          c.course_number AS "courseNumber",
+		  t.title,
+          t.description,
+          t.due_date AS "dueDate",
+          t.task_type AS "taskType",
+          t.priority,
+          t.estimated_hours AS "estimatedHours",
+          t.progress,
+          t.status,
+          t.created_at AS "createdAt",
+          t.updated_at AS "updatedAt"
+        FROM academic_tasks t
+		LEFT JOIN courses c
+		  ON t.course_id = c.id
+		  AND c.user_id = $1
+        WHERE t.user_id = $1
+        ORDER BY t.due_date ASC
       `,
       [req.userId]
     );
