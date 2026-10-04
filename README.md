@@ -91,8 +91,11 @@ main
 ├─ feature/authentication
 ├─ feature/course-management
 └─ feature/task-dashboard
+```
 
 ## Milestone 1 Setup
+
+For a complete Windows installation and verification walkthrough, see [`docs/TA_WINDOWS_SETUP.md`](docs/TA_WINDOWS_SETUP.md).
 
 ### Required Software
 
