@@ -92,6 +92,10 @@ main
 ├─ feature/course-management
 └─ feature/task-dashboard
 ```
+## Milestone 1 Documentation
+
+- [Milestone 1 Final Report](docs/milestone-1/Milestone_1_Build.pdf)
+- [Windows TA Setup and Verification Guide](docs/TA_WINDOWS_SETUP.md)
 
 ## Milestone 1 Setup
 
