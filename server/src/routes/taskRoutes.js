@@ -16,6 +16,12 @@ function normalizeTaskState(progress, status) {
     normalizedProgress = 100;
   } else if (normalizedProgress === 100) {
     normalizedStatus = "Completed";
+  } else if (
+    normalizedProgress > 0 &&
+	normalizedProgress <100 &&
+	normalizedStatus === "Not Started"
+  ) {
+	normalizedStatus = "In Progress";
   }
 
   return {

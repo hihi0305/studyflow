@@ -73,11 +73,48 @@ export function TaskFormModal({ isOpen, onClose, onSubmit, initialData = null, i
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
+    setFormData((prev) => {
+      if (name === "progress") {
+      const numericProgress = Number(value);
+
+      let nextStatus = prev.status;
+
+      if (numericProgress === 100) {
+        nextStatus = "Completed";
+      } else if (
+        numericProgress > 0 &&
+        numericProgress < 100 &&
+        prev.status === "Not Started"
+      ) {
+        nextStatus = "In Progress";
+      } else if (
+        numericProgress < 100 &&
+        prev.status === "Completed"
+      ) {
+        nextStatus = numericProgress === 0 ? "Not Started" : "In Progress";
+      }
+
+      return {
+        ...prev,
+        progress: numericProgress,
+        status: nextStatus,
+      };
+    }
+
+    if (name === "status") {
+      return {
+        ...prev,
+        status: value,
+        progress: value === "Completed" ? 100 : prev.progress,
+      };
+    }
+
+    return {
       ...prev,
-      [name]: name === "estimated_hours" || name === "progress" ? Number(value) : value,
-    }));
-  };
+      [name]: name === "estimated_hours" ? Number(value) : value,
+    };
+  });
+};
 
   const handleSubmit = (e) => {
     e.preventDefault();
