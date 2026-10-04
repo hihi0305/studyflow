@@ -85,8 +85,11 @@ export function DashboardPage() {
           {tasks.length > 0 ? (
             <ul className="divide-y divide-gray-200">
               {tasks.map((task) => (
-                <li key={task.id || task._id} className="flex items-center justify-between py-3">
-                  <div>
+                <li
+				  key={task.id || task._id}
+				  className="flex flex-col gap-2 py-3 sm:flex-row sm:items-center sm:justify-between"
+				>
+                  <div className="min-w-0">
                     <p className="text-sm font-medium text-gray-900">{task.title}</p>
                     {task.dueDate && (
                       <p className="text-xs text-gray-500">
@@ -96,7 +99,7 @@ export function DashboardPage() {
                   </div>
 
                   <span
-                    className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                    className={`inline-flex w-fit items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
                       task.status === "Completed"
                         ? 'bg-green-100 text-green-800'
                         : 'bg-gray-100 text-gray-700'

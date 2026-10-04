@@ -13,13 +13,13 @@ export function NavBar() {
   return (
     <header className="border-b border-gray-200 bg-white shadow-sm">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
-        <div className="flex items-center gap-8">
+        <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center sm:gap-8">
           <Link to="/" className="text-xl font-bold text-indigo-600">
             StudyFlow
           </Link>
 
           {isAuthenticated && (
-            <nav className="flex gap-4 text-sm font-medium text-gray-600">
+            <nav className="flex flex-wrap gap-x-4 gap-y-2 text-sm font-medium text-gray-600">
               <Link to="/dashboard" className="hover:text-indigo-600">Dashboard</Link>
               <Link to="/tasks" className="hover:text-indigo-600">Tasks</Link>
               <Link to="/courses" className="hover:text-indigo-600">Courses</Link>
@@ -27,7 +27,7 @@ export function NavBar() {
           )}
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex w-full items-center justify-between gap-3 sm:w-auto sm:justify-end">
           {isAuthenticated ? (
             <div className="flex items-center gap-3">
               <span className="text-xs text-gray-500">

@@ -66,14 +66,14 @@ export function TaskCard({ task, onEdit, onDelete }) {
         <div>
           {/* Top Header: Title & Badges */}
           <div className="flex items-start justify-between gap-3">
-            <div>
+            <div className="min-w-0 flex-1">
               <span className="inline-block rounded px-2 py-0.5 text-xs font-semibold uppercase tracking-wider text-indigo-600 bg-indigo-50 mb-1">
                 {displayTaskType}
               </span>
-              <h3 className="text-lg font-bold text-gray-900 leading-snug">{title}</h3>
+              <h3 className="line-clamp-2 text-lg font-bold leading-snug text-gray-900">{title}</h3>
             </div>
             <span
-              className={`rounded-full border px-2.5 py-0.5 text-xs font-semibold ${getPriorityBadge(
+              className={`shrink-0 whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold ${getPriorityBadge(
                 priority
               )}`}
             >

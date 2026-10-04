@@ -172,7 +172,7 @@ export function TaskList() {
 			  <button
 				type="button"
 				onClick={() => setTaskToDelete(null)}
-				className="min-h-[44px] rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+				className="min-h-[44px] w-full sm:w-auto rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
 			  >
 				Cancel
 			  </button>

@@ -112,8 +112,8 @@ export function TaskFormModal({ isOpen, onClose, onSubmit, initialData = null, i
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 overflow-y-auto">
-      <div className="w-full max-w-lg rounded-lg bg-white p-6 shadow-xl max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50 p-3 sm:items-center sm:p-4">
+      <div className="my-3 w-full max-w-lg rounded-lg bg-white p-4 shadow-xl sm:my-0 sm:p-6 max-h-[calc(100vh-1.5rem)] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between border-b pb-3">
           <h2 className="text-xl font-bold text-gray-900">
@@ -298,18 +298,18 @@ export function TaskFormModal({ isOpen, onClose, onSubmit, initialData = null, i
           </div>
 
           {/* Actions */}
-          <div className="mt-6 flex justify-end gap-3 pt-3 border-t">
+          <div className="mt-6 flex flex-col-reverse gap-3 border-t pt-3 sm:flex-row sm:justify-end">
             <button
               type="button"
               onClick={onClose}
-              className="rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 min-h-[44px]"
+              className="min-h-[44px] w-full rounded-md border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 sm:w-auto"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isLoading}
-              className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 min-h-[44px] disabled:opacity-50"
+              className="min-h-[44px] w-full rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 disabled:opacity-50 sm:w-auto"
             >
               {isLoading ? "Saving..." : initialData ? "Update Task" : "Create Task"}
             </button>
