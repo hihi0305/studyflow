@@ -1,4 +1,4 @@
-function calculateTaskAttention(task) {
+function calculateTaskAttention(task, referenceDate = new Date()) {
   if (!task || task.status === "Completed") {
     return null;
   }
@@ -9,7 +9,7 @@ function calculateTaskAttention(task) {
   const dueDate = new Date(task.dueDate);
 
   if (!Number.isNaN(dueDate.getTime())) {
-    const now = new Date();
+    const now = referenceDate;
 
     // Compare calendar days rather than exact hours.
     const today = new Date(
