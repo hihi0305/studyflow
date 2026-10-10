@@ -5,6 +5,18 @@ export function DashboardPage() {
   const [summary, setSummary] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const getPriorityBadgeClass = (priority) => {
+    switch (priority?.toLowerCase()) {
+      case 'high':
+        return 'bg-red-50 text-red-700 border border-red-200';
+      case 'medium':
+        return 'bg-amber-50 text-amber-700 border border-amber-200';
+      case 'low':
+         return 'bg-blue-50 text-blue-700 border border-blue-200';
+      default:
+        return 'bg-gray-50 text-gray-700 border border-gray-200';
+    }
+  };
 
   useEffect(() => {
     const fetchSummary = async () => {
@@ -85,24 +97,12 @@ export function DashboardPage() {
           {tasks.length > 0 ? (
             <ul className="space-y-3">
               {tasks.map((task) => {
-                const courseName = task.course?.name || task.courseName || 'General';
+                const courseName = task.course?.name || task.courseName || 'No Course';
                 const progressVal = task.progress ?? (task.status === 'Completed' ? 100 : 0)
-                const getPriorityCardClass = (priority) => {
-                  switch (priority?.toLowerCase()) {
-                    case 'high':
-                      return 'bg-red-50/80 border-red-200 hover:bg-red-50';
-                    case 'medium':
-                      return 'bg-amber-50/80 border-amber-200 hover:bg-amber-50';
-                    case 'low':
-                      return 'bg-blue-50/80 border-blue-200 hover:bg-blue-50';
-                    default:
-                      return 'bg-gray-50/80 border-gray-200 hover:bg-gray-50';
-                  }
-                };
                 return (
                   <li 
                     key={task.id || task._id} 
-                    className={`flex flex-col gap-3 p-4 rounded-lg border transition-colors sm:flex-row sm:items-center sm:justify-between ${getPriorityCardClass(task.priority)}`}
+                    className={`flex flex-col gap-3 p-4 rounded-lg shadow-sm border border-gray-200 transition-colors sm:flex-row sm:items-center sm:justify-between`}
                   >
                     <div className="min-w-0 flex flex-col items-start gap-2">
                       <span className='inline-flex items-center rounded bg-indigo-50 px-2 py-0.5 text-xs font-medium text-indigo-700 border border-indigo-100'>
@@ -115,6 +115,15 @@ export function DashboardPage() {
                         </p>
                       )}
                     </div>
+
+                    {task.priority && (
+                      <div className='flex items-center sm:justify-center shrink-0'>
+                        <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${getPriorityBadgeClass(task.priority)}`}>
+                          {task.priority} Priority
+                        </span>
+                      </div>
+                    )}
+
                     <div className='flex flex-col items-start sm:items-end text-left sm:text-right gap-2 shrink-0'>
                       <span
                         className={`inline-flex w-fit items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
