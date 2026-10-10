@@ -83,32 +83,56 @@ export function DashboardPage() {
 
         <div className="p-6">
           {tasks.length > 0 ? (
-            <ul className="divide-y divide-gray-200">
-              {tasks.map((task) => (
-                <li
-				  key={task.id || task._id}
-				  className="flex flex-col gap-2 py-3 sm:flex-row sm:items-center sm:justify-between"
-				>
-                  <div className="min-w-0">
-                    <p className="text-sm font-medium text-gray-900">{task.title}</p>
-                    {task.dueDate && (
-                      <p className="text-xs text-gray-500">
-                        Due: {new Date(task.dueDate).toLocaleDateString()}
-                      </p>
-                    )}
-                  </div>
-
-                  <span
-                    className={`inline-flex w-fit items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
-                      task.status === "Completed"
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-gray-100 text-gray-700'
-                    }`}
+            <ul className="space-y-3">
+              {tasks.map((task) => {
+                const courseName = task.course?.name || task.courseName || 'General';
+                const progressVal = task.progress ?? (task.status === 'Completed' ? 100 : 0)
+                const getPriorityCardClass = (priority) => {
+                  switch (priority?.toLowerCase()) {
+                    case 'high':
+                      return 'bg-red-50/80 border-red-200 hover:bg-red-50';
+                    case 'medium':
+                      return 'bg-amber-50/80 border-amber-200 hover:bg-amber-50';
+                    case 'low':
+                      return 'bg-blue-50/80 border-blue-200 hover:bg-blue-50';
+                    default:
+                      return 'bg-gray-50/80 border-gray-200 hover:bg-gray-50';
+                  }
+                };
+                return (
+                  <li 
+                    key={task.id || task._id} 
+                    className={`flex flex-col gap-3 p-4 rounded-lg border transition-colors sm:flex-row sm:items-center sm:justify-between ${getPriorityCardClass(task.priority)}`}
                   >
-                    {task.status}
-                  </span>
-                </li>
-              ))}
+                    <div className="min-w-0 flex flex-col items-start gap-2">
+                      <span className='inline-flex items-center rounded bg-indigo-50 px-2 py-0.5 text-xs font-medium text-indigo-700 border border-indigo-100'>
+                          {courseName}
+                      </span>
+                      <p className="text-sm font-medium text-gray-900">{task.title}</p>
+                      {task.dueDate && (
+                        <p className="text-xs text-gray-500">
+                          Due: {new Date(task.dueDate).toLocaleDateString()}
+                        </p>
+                      )}
+                    </div>
+                    <div className='flex flex-col items-start sm:items-end text-left sm:text-right gap-2 shrink-0'>
+                      <span
+                        className={`inline-flex w-fit items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${
+                          task.status === "Completed"
+                            ? 'bg-green-100 text-green-800'
+                            : 'bg-gray-100 text-gray-700'
+                        }`}
+                      >
+                        {task.status}
+                      </span>
+
+                      <p className="text-xs text-gray-500">
+                        Progress: <span className="font-medium text-gray-700">{progressVal}%</span>
+                      </p>
+                    </div>
+                  </li>
+                );
+              })}
             </ul>
           ) : (
             <p className="text-sm text-gray-500">No upcoming tasks found.</p>
