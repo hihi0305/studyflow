@@ -1,6 +1,9 @@
 const express = require("express");
 const pool = require("../db");
 const authenticateToken = require("../middleware/authMiddleware");
+const {
+  calculateTaskAttention,
+} = require("../utils/taskAttention");
 
 const router = express.Router();
 
@@ -85,8 +88,18 @@ router.get("/", async (req, res) => {
       [req.userId]
     );
 
-    return res.status(200).json({
-      tasks: result.rows,
+    const tasksWithAttention = result.rows.map((task) => {
+	  const attention = calculateTaskAttention(task);
+	  
+	  return {
+		...task,
+		attentionLevel: attention?.attentionLevel ?? null,
+		attentionScore: attention?.attentionScore ?? null,
+	  };
+	});
+	
+	return res.status(200).json({
+      tasks: tasksWithAttention,
     });
   } catch (error) {
     console.error("Get tasks error:", error);
@@ -221,8 +234,15 @@ router.post("/", async (req, res) => {
       ]
     );
 
-    return res.status(201).json({
-      task: result.rows[0],
+    const createdTask = result.rows[0];
+	const attention = calculateTaskAttention(createdTask);
+	
+	return res.status(201).json({
+      task: {
+		...createdTask,
+		attentionLevel: attention?.attentionLevel ?? null,
+		attentionScore: attention?.attentionScore ?? null,
+	  },
     });
   } catch (error) {
     console.error("Create task error:", error);
@@ -417,8 +437,15 @@ router.put("/:id", async (req, res) => {
       ]
     );
 
-    return res.status(200).json({
-      task: result.rows[0],
+    const updatedTask = result.rows[0];
+	const attention = calculateTaskAttention(updatedTask);
+	
+	return res.status(200).json({
+      task: {
+		...updatedTask,
+		attentionLevel: attention?.attentionLevel ?? null,
+		attentionScore: attention?.attentionScore ?? null,
+	  },
     });
   } catch (error) {
     console.error("Update task error:", error);
