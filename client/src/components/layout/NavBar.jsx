@@ -14,7 +14,7 @@ export function NavBar() {
     <header className="border-b border-gray-200 bg-white shadow-sm">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
         <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:items-center sm:gap-8">
-          <Link to="/" className="text-xl font-bold text-indigo-600">
+          <Link to="/dashboard" className="text-xl font-bold text-indigo-600">
             StudyFlow
           </Link>
 
