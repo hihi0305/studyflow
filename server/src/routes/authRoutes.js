@@ -3,6 +3,7 @@ const bcrypt = require("bcryptjs");
 const pool = require("../db");
 const jwt = require("jsonwebtoken");
 const authenticateToken = require("../middleware/authMiddleware");
+const { validatePassword } = require("../utils/passwordValidation");
 
 const router = express.Router();
 
@@ -15,6 +16,17 @@ router.post("/register", async (req, res) => {
         error: { message: "Name, email, and password are required." },
       });
     }
+	
+	const passwordValidation = validatePassword(password);
+
+	if (!passwordValidation.valid) {
+	  return res.status(400).json({
+		error: {
+		  message: "Password does not meet the security requirements.",
+		  details: passwordValidation.errors,
+		},
+	  });
+	}
 
     const normalizedEmail = email.trim().toLowerCase();
 
