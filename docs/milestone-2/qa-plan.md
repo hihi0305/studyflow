@@ -77,7 +77,7 @@ Verify:
 - Completed status results in 100% progress
 - Dashboard reflects saved updates
 
-## 8. Task Attention Level
+## 8. Task Attention Level (TAL)
 
 Verify:
 
