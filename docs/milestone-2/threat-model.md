@@ -202,3 +202,10 @@ The StudyFlow Milestone 2 threat model identifies authentication, authorization,
 The reviewed implementation already includes several protections, including JWT authentication, user-specific database filtering, Course ownership verification, parameterized PostgreSQL queries, bcrypt password hashing, backend input validation, and Milestone 2 stronger password requirements.
 
 The remaining Milestone 2 security work will focus on verifying these controls through direct security tests, completing the relevant OWASP Top 10 review, preserving before-and-after security evidence, and documenting any remaining risks.
+
+## Verification Evidence
+
+- Stronger Password Validation: [Issue #36](https://github.com/hihi0305/studyflow/issues/36)
+- Password Validation Implementation and Automated Tests: [PR #37](https://github.com/hihi0305/studyflow/pull/37)
+- Threat Model Tracking: [Issue #38](https://github.com/hihi0305/studyflow/issues/38)
+- Threat Model Peer Review: [PR #39](https://github.com/hihi0305/studyflow/pull/39)
