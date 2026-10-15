@@ -164,7 +164,7 @@ function ChecklistItem({ isMet, label }) {
     <div className={`flex items-center gap-2 ${isMet ? 'text-teal-700 font-medium' : 'text-gray-500'}`}>
       <span
         className={`inline-flex items-center justify-center w-4 h-4 rounded-full text-[10px] text-white font-bold ${
-          isMet ? 'bg-teal-600' : 'bg-gray-300'
+          isMet ? 'bg-emerald-600' : 'bg-red-300'
         }`}
       >
         {isMet ? '✓' : '✕'}
