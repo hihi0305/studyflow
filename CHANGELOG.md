@@ -1,0 +1,68 @@
+# Changelog
+
+All notable changes to StudyFlow are documented in this file.
+
+## Milestone 2 — In Progress
+
+### Added
+
+- Added Task Attention Level calculation and backend API integration
+- Added Task Attention Level unit tests
+- Added stronger backend password validation
+- Added frontend password-requirement checklist and validation
+- Added Milestone 2 threat model
+- Added Milestone 2 QA plan
+- Added OWASP Top 10 review
+- Added Milestone 2 development workflow documentation
+
+### Changed
+
+- Improved Dashboard task information visibility
+- Updated StudyFlow logo navigation to route correctly to the Dashboard
+- Strengthened registration password requirements
+
+### Fixed
+
+- Fixed missing Course information on Dashboard task cards
+- Fixed missing user-defined priority display on Dashboard task cards
+- Fixed missing progress display on Dashboard task cards
+- Fixed incorrect StudyFlow logo navigation behavior
+
+### Security
+
+- Enforced password requirements on the backend before account creation
+- Verified authentication behavior for missing, invalid, and valid tokens
+- Verified Course authorization and user-specific data isolation
+- Verified Academic Task authorization and user-specific data isolation
+- Verified Course ownership before Task association
+- Verified representative backend input-validation failures
+- Preserved before-and-after password-security evidence
+
+### Testing
+
+- Added automated Task Attention Level unit tests
+- Added automated password-validation tests
+- Added initial coverage measurement and coverage target
+- Completed authentication, authorization, and input-validation security verification
+- Added reusable Milestone 2 QA checklist
+
+### Documentation
+
+- Added Task Attention Level documentation
+- Added threat model documentation
+- Added QA plan documentation
+- Added OWASP Top 10 review documentation
+- Added branching, commit, PR, review, and merge workflow documentation
+
+### Remaining Milestone 2 Work
+
+- Task Attention Level frontend visualization
+- Search and filtering
+- Improved progress visualization
+- Integration testing
+- Cross-viewport / cross-platform verification
+- README and setup/verification updates
+- Final regression testing
+- Demo preparation
+- Final contribution statements
+- Final `milestone-2` release tag
