@@ -1,9 +1,9 @@
-# StudyFlow Milestone 1
+# StudyFlow Milestone 2
 ## Windows Setup and Verification Guide for TA
 
 This guide assumes that Git, Node.js, npm, and PostgreSQL are not yet installed.
 
-StudyFlow Milestone 1 was developed and verified using:
+StudyFlow Milestone 2 was developed and verified using:
 
 - Node.js v20.20.2
 - npm 10.8.2
@@ -207,6 +207,8 @@ The migrations create the tables required for:
 
 and align the Course schema with the final `courseNumber` model.
 
+No additional database migration is required for the current Milestone 2 Task Attention Level and password-validation changes because these features do not modify the database schema.
+
 
 ## 7. Start the Backend
 
@@ -227,7 +229,27 @@ npm start
 ```
 
 
-## 8. Install and Start the Frontend
+## 8. Run Backend Automated Tests
+
+Open a separate Command Prompt window and navigate to the `server` directory.
+
+Run the backend automated tests:
+
+```cmd
+npm test
+```
+
+Generate the backend coverage report:
+
+```cmd
+npm run test:coverage
+```
+
+Milestone 2 automated testing includes verification of Task Attention Level logic and password-validation behavior.
+
+The test command should complete without failing tests. The coverage command should print a coverage summary in the terminal.
+
+## 9. Install and Start the Frontend
 
 Open a second Command Prompt window.
 
@@ -258,26 +280,28 @@ Open the `Local` address shown by Vite in a web browser.
 Keep both the backend and frontend Command Prompt windows running.
 
 
-## 9. Seed Data and Demonstration Account
+## 10. Seed Data and Demonstration Account
 
-No database seed script is required for Milestone 1.
+No database seed script is required for Milestone 2.
 
 No shared demonstration account is required.
 
 Create a new user through the StudyFlow registration page and create sample Course and Academic Task data through the application.
 
 
-## 10. TA Verification Workflow
+## 11. TA Verification Workflow
 
-Verify the Milestone 1 MVP using the following workflow:
+Verify the Milestone 1 workflow and the completed Milestone 2 functionality using the following steps:
 
 1. Register a new user account.
-2. Log in with the new account.
-3. Confirm that authenticated pages are accessible.
-4. Confirm that protected pages cannot be accessed after logout.
-5. Create a Course, for example `CS 415`.
-6. Edit the Course and confirm that the updated course number is displayed.
-7. Create an Academic Task with:
+2. Confirm that weak passwords that do not satisfy the password requirements are rejected.
+3. Register successfully using a password that satisfies all displayed password requirements.
+4. Log in with the new account.
+5. Confirm that authenticated pages are accessible.
+6. Confirm that protected pages cannot be accessed after logout.
+7. Create a Course, for example `CS 415`.
+8. Edit the Course and confirm that the updated course number is displayed.
+9. Create an Academic Task with:
    - title
    - due date
    - task type
@@ -285,22 +309,26 @@ Verify the Milestone 1 MVP using the following workflow:
    - estimated hours
    - progress
    - status
-8. Optionally associate the Academic Task with the Course.
-9. Edit the Academic Task and update its progress and status.
-10. Set progress between 1% and 99% while the task is still Not Started and confirm that the task is normalized to In Progress.
-11. Mark the task as Completed and confirm that progress is normalized to 100%.
-12. Open the Dashboard and confirm that Total, Active, and Completed task summaries reflect the saved data.
-13. Refresh the browser and confirm that the data persists.
-14. Log out.
-15. Log in again and confirm that the saved Course and Academic Task data is still available.
-16. Delete the Academic Task and Course and confirm that the interface updates correctly.
+10. Optionally associate the Academic Task with the Course.
+11. Confirm that the active task displays its calculated Task Attention Level.
+12. Edit the Academic Task and update its progress and status.
+13. Set progress between 1% and 99% while the task is still Not Started and confirm that the task is normalized to In Progress.
+14. Mark the task as Completed and confirm that progress is normalized to 100%.
+15. Open the Dashboard and confirm that Total, Active, and Completed task summaries reflect the saved data.
+16. Refresh the browser and confirm that the data persists.
+17. Log out.
+18. Log in again and confirm that the saved Course and Academic Task data is still available.
+19. Run the backend automated tests with `npm test`.
+20. Generate the backend coverage report with `npm run test:coverage`.
+21. Delete the Academic Task and Course and confirm that the interface updates correctly.
 
 
-## 11. Expected Milestone 1 Behavior
+## 12. Expected Milestone 2 Behavior
 
 The following functionality should operate successfully:
 
 - User registration
+- Strong password validation
 - Login and logout
 - Protected routes
 - User-specific data ownership
@@ -310,12 +338,24 @@ The following functionality should operate successfully:
 - Task progress and status synchronization
 - Completed task normalization to 100%
 - Dashboard summary updates
+- Task Attention Level calculation
+- Backend automated tests
+- Backend coverage generation
 - PostgreSQL persistence
 - Persistence after refresh and re-login
 - Responsive browser interface
 
 
-## 12. Common Windows Setup Problems
+## 13. Common Windows Setup Problems
+
+### Backend tests fail to run
+
+Confirm that:
+
+- Backend dependencies were installed with `npm install`.
+- The command is being run from the `server` directory.
+- The installed Node.js version matches the verified project version.
+
 
 ### `git` is not recognized
 
