@@ -1,24 +1,57 @@
 import { calculateTaskAttention } from "../../utils/taskAttention";
 
-// Helper function to get card background & border tint based on Task Attention Level
-const getAttentionCardClass = (task) => {
+// Border styling: High TAL (red), Medium TAL (yellow/amber), Low TAL (blue), Completed (green)
+const getAttentionBorderClass = (task) => {
+  if (task.status === "Completed") {
+    return "border-2 border-emerald-500";
+  }
+
   const attention = calculateTaskAttention(task);
   const level = attention?.attentionLevel?.toLowerCase();
 
   switch (level) {
     case "high":
-      return "bg-red-50/80 border-red-200 hover:bg-red-50";
+      return "border-2 border-red-500";
     case "medium":
-      return "bg-amber-50/80 border-amber-200 hover:bg-amber-50";
+      return "border-2 border-amber-400";
     case "low":
-      return "bg-blue-50/80 border-blue-200 hover:bg-blue-50";
+      return "border-2 border-blue-400";
     default:
-      return "bg-gray-50/80 border-gray-200 hover:bg-gray-50";
+      return "border-2 border-emerald-500";
   }
 };
 
-export function TaskCard({ task, onEdit, onDelete, showAttention = false }) {
-  // Destructure task properties with fallbacks
+// Task Attention badge color helper
+const getAttentionBadgeClass = (level, isCompleted) => {
+  if (isCompleted) {
+    return "bg-emerald-100 text-emerald-800 border-emerald-300";
+  }
+  switch (level?.toLowerCase()) {
+    case "high":
+      return "bg-red-100 text-red-800 border-red-300";
+    case "medium":
+      return "bg-amber-100 text-amber-800 border-amber-300";
+    case "low":
+      return "bg-blue-100 text-blue-800 border-blue-300";
+    default:
+      return "bg-gray-100 text-gray-700 border-gray-300";
+  }
+};
+
+// User Priority badge color helper
+const getUserPriorityBadgeClass = (priority) => {
+  switch (priority?.toLowerCase()) {
+    case "high":
+      return "bg-red-50 text-red-700 border-red-200";
+    case "low":
+      return "bg-green-50 text-green-700 border-green-200";
+    case "medium":
+    default:
+      return "bg-amber-50 text-amber-700 border-amber-200";
+  }
+};
+
+export function TaskCard({ task, onEdit, onDelete }) {
   const {
     id,
     title,
@@ -41,16 +74,14 @@ export function TaskCard({ task, onEdit, onDelete, showAttention = false }) {
   const displayTaskType = task_type || taskType || "Assignment";
   const displayHours = estimated_hours || estimatedHours;
 
-  // Calculate attention level ONLY when showAttention is true
-  const attention = showAttention ? calculateTaskAttention(task) : null;
-  const attentionLevel = attention?.attentionLevel;
+  const isCompleted = status === "Completed";
+  const attention = calculateTaskAttention(task);
+  const attentionLevel = isCompleted
+    ? "Completed"
+    : attention?.attentionLevel || "Low";
 
-  // Set card container background/border based on showAttention flag
-  const cardBgClass = showAttention
-    ? getAttentionCardClass(task)
-    : "bg-white border-gray-200 hover:shadow-md";
+  const borderClass = getAttentionBorderClass(task);
 
-  // Format date string (e.g., "Oct 15, 2026")
   const formatDate = (dateStr) => {
     if (!dateStr) return "No due date";
     const date = new Date(dateStr);
@@ -63,20 +94,6 @@ export function TaskCard({ task, onEdit, onDelete, showAttention = false }) {
         });
   };
 
-  // Priority color styles
-  const getPriorityBadge = (p) => {
-    switch (p?.toLowerCase()) {
-      case "high":
-        return "bg-red-100 text-red-800 border-red-200";
-      case "low":
-        return "bg-green-100 text-green-800 border-green-200";
-      case "medium":
-      default:
-        return "bg-amber-100 text-amber-800 border-amber-200";
-    }
-  };
-
-  // Status color styles
   const getStatusBadge = (s) => {
     switch (s?.toLowerCase()) {
       case "completed":
@@ -91,10 +108,10 @@ export function TaskCard({ task, onEdit, onDelete, showAttention = false }) {
 
   return (
     <div
-      className={`flex flex-col justify-between rounded-lg border p-5 shadow-sm transition-all ${cardBgClass}`}
+      className={`flex flex-col justify-between rounded-lg bg-white p-5 shadow-sm transition-all hover:shadow-md ${borderClass}`}
     >
       <div>
-        {/* Top Header: Title, Type & Badges */}
+        {/* Top Header: Title & Badges */}
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
             <span className="inline-block rounded px-2 py-0.5 text-xs font-semibold uppercase tracking-wider text-indigo-600 bg-indigo-50 mb-1">
@@ -105,31 +122,22 @@ export function TaskCard({ task, onEdit, onDelete, showAttention = false }) {
             </h3>
           </div>
 
-          <div className="flex flex-col items-end gap-1 shrink-0">
-            {/* Attention Badge (Dashboard only) */}
-            {showAttention && (
-              <span
-                className={`whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold ${
-                  attentionLevel === "High"
-                    ? "bg-red-100 text-red-800 border-red-200"
-                    : attentionLevel === "Medium"
-                    ? "bg-amber-100 text-amber-800 border-amber-200"
-                    : attentionLevel === "Low"
-                    ? "bg-blue-100 text-blue-800 border-blue-200"
-                    : "bg-gray-100 text-gray-700 border-gray-200"
-                }`}
-              >
-                {attentionLevel ? `${attentionLevel} Attention` : "Completed"}
-              </span>
-            )}
-
-            {/* Standard User-Defined Priority Badge */}
+          {/* Badges displayed for every card (Dashboard & Tasks page) */}
+          <div className="flex flex-col items-end gap-1.5 shrink-0">
             <span
-              className={`whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold ${getPriorityBadge(
+              className={`whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold ${getUserPriorityBadgeClass(
                 priority
               )}`}
             >
-              {priority} Priority
+              User Priority: {priority}
+            </span>
+            <span
+              className={`whitespace-nowrap rounded-full border px-2.5 py-0.5 text-xs font-semibold ${getAttentionBadgeClass(
+                attentionLevel,
+                isCompleted
+              )}`}
+            >
+              Task Attention: {attentionLevel}
             </span>
           </div>
         </div>
@@ -165,7 +173,9 @@ export function TaskCard({ task, onEdit, onDelete, showAttention = false }) {
           <div className="h-2 w-full overflow-hidden rounded-full bg-gray-100">
             <div
               className={`h-full transition-all duration-300 ${
-                progress === 100 ? "bg-emerald-500" : "bg-indigo-600"
+                isCompleted || progress === 100
+                  ? "bg-emerald-500"
+                  : "bg-indigo-600"
               }`}
               style={{ width: `${Math.min(100, Math.max(0, progress))}%` }}
             />
