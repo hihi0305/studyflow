@@ -12,9 +12,9 @@ export function TaskList() {
   // Search & Filter States
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCourseNumber, setSelectedCourseNumber] = useState("");
-  const [selectedStatus, setSelectedStatus] = useState("");
   const [selectedPriority, setSelectedPriority] = useState("");
   const [selectedAttentionLevel, setSelectedAttentionLevel] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState("");
 
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -41,7 +41,7 @@ export function TaskList() {
     }
   };
 
-  // Dynamically extract unique course numbers from loaded tasks
+  // Dynamically extract unique course numbers from loaded tasks (excluding empty/null)
   const availableCourseNumbers = Array.from(
     new Set(
       (Array.isArray(tasks) ? tasks : [])
@@ -50,12 +50,18 @@ export function TaskList() {
     )
   );
 
+  // Check if any tasks exist without an associated course
+  const hasTasksWithoutCourse = (Array.isArray(tasks) ? tasks : []).some((t) => {
+    const rawCourse = t.courseNumber || t.course_number || t.course_code || t.course?.courseNumber || t.course;
+    return !rawCourse;
+  });
+
   // Multi-criteria defensive filtering
   const filteredTasks = Array.isArray(tasks)
     ? tasks.filter((task) => {
         if (!task) return false;
 
-        // 1. Search Query (Title, Description, Course Number, Task Type, Priority)
+        // 1. Search Query (Title, Description, Course Number, Task Type, User Priority)
         const query = (searchQuery || "").toLowerCase().trim();
         const title = String(task.title || task.name || "").toLowerCase();
         const description = String(task.description || "").toLowerCase();
@@ -73,20 +79,25 @@ export function TaskList() {
           taskType.includes(query) ||
           priority.includes(query);
 
-        // 2. Course Number Filter
+        // 2. Course Number Filter (Supports "No Course")
         const rawTaskCourse =
           task.courseNumber || task.course_number || task.course_code || task.course?.courseNumber || task.course || "";
-        const matchesCourseNumber =
-          !selectedCourseNumber || rawTaskCourse === selectedCourseNumber;
+        
+        let matchesCourseNumber = true;
+        if (selectedCourseNumber === "NO_COURSE") {
+          matchesCourseNumber = !rawTaskCourse; // Matches tasks where course is missing or empty
+        } else if (selectedCourseNumber) {
+          matchesCourseNumber = rawTaskCourse === selectedCourseNumber;
+        }
 
         // 3. Status Filter
         const matchesStatus = !selectedStatus || task.status === selectedStatus;
 
-        // 4. User-Defined Priority Filter
+        // 4. User Priority Filter (User-defined)
         const matchesPriority =
           !selectedPriority || task.priority === selectedPriority;
 
-        // 5. Task Attention Level Filter (dynamically calculated via taskAttention.js)
+        // 5. Task Attention Level Filter (Dynamically calculated via taskAttention.js)
         const attentionResult = calculateTaskAttention(task);
         const calculatedAttentionLevel = attentionResult?.attentionLevel || "";
         const matchesAttention =
@@ -225,7 +236,7 @@ export function TaskList() {
 
           {/* Bottom Row: 4 Filter Dropdowns Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
-            {/* Filter 1: Course Number */}
+            {/* Filter 1: Course Number (with "No Course" option) */}
             <div>
               <label htmlFor="filter-course-number" className="block text-xs font-semibold text-gray-600 mb-1">
                 Course Number
@@ -237,6 +248,9 @@ export function TaskList() {
                 className="w-full py-1.5 px-2 border border-gray-300 rounded-md text-xs bg-white shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
               >
                 <option value="">All Course Numbers</option>
+                {hasTasksWithoutCourse && (
+                  <option value="NO_COURSE">No Course</option>
+                )}
                 {availableCourseNumbers.map((cNum) => (
                   <option key={cNum} value={cNum}>
                     {cNum}
@@ -263,36 +277,36 @@ export function TaskList() {
               </select>
             </div>
 
-            {/* Filter 3: User-Defined Priority */}
+            {/* Filter 3: User Priority (Explicit Label) */}
             <div>
-              <label htmlFor="filter-priority" className="block text-xs font-semibold text-gray-600 mb-1">
-                Priority
+              <label htmlFor="filter-user-priority" className="block text-xs font-semibold text-gray-600 mb-1">
+                User Priority
               </label>
               <select
-                id="filter-priority"
+                id="filter-user-priority"
                 value={selectedPriority}
                 onChange={(e) => setSelectedPriority(e.target.value)}
                 className="w-full py-1.5 px-2 border border-gray-300 rounded-md text-xs bg-white shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
               >
-                <option value="">All Priorities</option>
+                <option value="">All User Priorities</option>
                 <option value="High">High</option>
                 <option value="Medium">Medium</option>
                 <option value="Low">Low</option>
               </select>
             </div>
 
-            {/* Filter 4: Task Attention Level (Calculated) */}
+            {/* Filter 4: Task Attention Level (Explicit Label & Dynamic Calculation) */}
             <div>
-              <label htmlFor="filter-attention" className="block text-xs font-semibold text-gray-600 mb-1">
-                Attention Level
+              <label htmlFor="filter-task-attention-level" className="block text-xs font-semibold text-gray-600 mb-1">
+                Task Attention Level
               </label>
               <select
-                id="filter-attention"
+                id="filter-task-attention-level"
                 value={selectedAttentionLevel}
                 onChange={(e) => setSelectedAttentionLevel(e.target.value)}
                 className="w-full py-1.5 px-2 border border-gray-300 rounded-md text-xs bg-white shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
               >
-                <option value="">All Attention Levels</option>
+                <option value="">All Task Attention Levels</option>
                 <option value="High">High</option>
                 <option value="Medium">Medium</option>
                 <option value="Low">Low</option>
