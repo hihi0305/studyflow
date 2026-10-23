@@ -45,6 +45,10 @@ All notable changes to StudyFlow are documented in this file.
 - Added initial coverage measurement and coverage target
 - Completed authentication, authorization, and input-validation security verification
 - Added reusable Milestone 2 QA checklist
+- Added API-level integration testing for the main StudyFlow user flows
+- Verified authentication, Course CRUD, Academic Task CRUD, Course association, Task Attention Level API data, progress/status normalization, and user-specific data isolation
+- Verified the complete backend regression suite with 17 tests passing and 0 failures
+- Generated backend coverage after integration testing; `passwordValidation.js` and `taskAttention.js` retained 100% line, branch, and function coverage
 
 ### Documentation
 
@@ -53,13 +57,13 @@ All notable changes to StudyFlow are documented in this file.
 - Added QA plan documentation
 - Added OWASP Top 10 review documentation
 - Added branching, commit, PR, review, and merge workflow documentation
+- Updated Milestone 2 README and Windows TA setup/verification documentation
 
 ### Remaining Milestone 2 Work
 
 - Task Attention Level frontend visualization
 - Search and filtering
 - Improved progress visualization
-- Integration testing
 - Cross-viewport / cross-platform verification
 - README and setup/verification updates
 - Final regression testing
