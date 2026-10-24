@@ -10,7 +10,9 @@ College students often manage multiple deadlines across several courses. Traditi
 
 StudyFlow combines course and academic task management with deadline, estimated work hours, user-defined priority, and progress information in a centralized dashboard.
 
-The Milestone 1 application helps students organize their academic responsibilities through authenticated course and academic task management, progress and status tracking, persistent storage, and a centralized dashboard. In a later milestone, StudyFlow may add Task Attention Levels based on factors such as due date, estimated work hours, user-defined priority, and progress.
+The Milestone 2 version of StudyFlow builds on the Milestone 1 end-to-end MVP by adding Task Attention Level calculation, stronger password validation, expanded automated and integration testing, security verification, cross-viewport verification, and supporting documentation.
+
+StudyFlow now evaluates active academic tasks using due date, estimated work hours, user-defined priority, and progress to calculate a Task Attention Level. This helps users distinguish between tasks that require high, medium, or low attention while preserving the original course, task, progress, and status-management workflow.
 
 ## Core Features
 
@@ -27,10 +29,13 @@ The Milestone 1 application helps students organize their academic responsibilit
 - Centralized academic dashboard
 - Persistent database storage
 - User-specific data access
+- Task Attention Level calculation
+- Stronger registration password validation
+- Automated backend testing and coverage verification
+- Security controls for authentication, authorization, ownership, and input validation
 
 ### Planned Later Features
 
-- Task Attention Level calculation and display
 - Search and filtering
 - Improved progress visualization
 - Workload-based task recommendations
@@ -92,24 +97,32 @@ main
 ├─ feature/course-management
 └─ feature/task-dashboard
 ```
-## Milestone 1 Documentation
+## Project Documentation
 
 - [Milestone 1 Final Report](docs/milestone-1/Milestone_1_Build.pdf)
 - [Windows TA Setup and Verification Guide](docs/TA_WINDOWS_SETUP.md)
+- [Task Attention Level Documentation](docs/milestone-2/task-attention-level.md)
+- [Threat Model](docs/milestone-2/threat-model.md)
+- [Milestone 2 QA Plan](docs/milestone-2/qa-plan.md)
+- [OWASP Top 10 Review](docs/milestone-2/owasp-top-10-review.md)
+- [Development Workflow](docs/milestone-2/development-workflow.md)
+- [Changelog](CHANGELOG.md)
 
-## Milestone 1 Setup
+## Project Setup
 
-For a complete Windows installation and verification walkthrough, see [`docs/TA_WINDOWS_SETUP.md`](docs/TA_WINDOWS_SETUP.md).
+For a complete Windows installation and verification walkthrough, see the [Windows TA Setup and Verification Guide](docs/TA_WINDOWS_SETUP.md).
 
 ### Required Software
 
-The Milestone 1 version of StudyFlow was developed and verified using:
+The Milestone 2 version of StudyFlow was developed and verified using:
 
 - Node.js v20.20.2
 - npm 10.8.2
 - PostgreSQL 18.6
 
 ### Backend
+
+Install the backend dependencies and start development server:
 
 ```bash
 cd server
@@ -126,7 +139,24 @@ Apply the database migrations in order:
 3. `003_create_academic_tasks.sql`
 4. `004_rename_course_name_to_course_number.sql`
 
+No additional database migration is required for the current Milestone 2 Task Attention Level or password-validation changes because these features do not modify the database schema.
+
+Run the backend automated tests:
+
+```bash
+cd server
+npm test
+```
+
+Generate the backend test coverage report:
+
+```bash
+npm run test:coverage
+```
+
 ### Frontend
+
+Install the frontend dependencies and start the development server:
 
 ```bash
 cd client
@@ -134,14 +164,30 @@ npm install
 npm run dev
 ```
 
-A production frontend build can be generated with `npm run build`.
+A production frontend build can be generated with:
+
+```bash
+npm run build
+```
 
 ### Verification
 
-No seed script or demonstration account is required for Milestone 1. A tester can register a new account and create sample Course and Academic Task data through the application.
+No seed script or shared demonstration account is required for Milestone 2. A tester can register a new account and create sample Course and Academic Task data through the application.
 
 Basic verification flow:
 
-`Register → Login → Create Course → Create Academic Task → Update Progress / Status → View Dashboard → Logout → Login Again → Verify Persisted Data`
+`Register → Login → Create Course → Create Academic Task → Verify Task Attention Level → Update Progress / Status → View Dashboard → Logout → Login Again → Verify Persisted Data`
 
-See the Milestone 1 report for the complete design, implementation, and verification documentation.
+Additional Milestone 2 verification includes:
+
+- Strong password validation during registration
+- Automated Task Attention Level and password-validation tests
+- API-level integration testing for the main user flows
+- Backend regression testing
+- Backend test coverage verification
+- Authentication and authorization controls
+- User-specific Course and Academic Task ownership
+- Input validation
+- Task Attention Level calculation
+- Progress and status normalization
+- Cross-viewport verification at desktop, medium-width, and mobile viewport sizes
