@@ -10,7 +10,7 @@ College students often manage multiple deadlines across several courses. Traditi
 
 StudyFlow combines course and academic task management with deadline, estimated work hours, user-defined priority, and progress information in a centralized dashboard.
 
-The Milestone 2 version of StudyFlow builds on the Milestone 1 end-to-end MVP by adding Task Attention Level calculation, stronger password validation, expanded automated testing and security verification, and supporting documentation.
+The Milestone 2 version of StudyFlow builds on the Milestone 1 end-to-end MVP by adding Task Attention Level calculation, stronger password validation, expanded automated and integration testing, security verification, cross-viewport verification, and supporting documentation.
 
 StudyFlow now evaluates active academic tasks using due date, estimated work hours, user-defined priority, and progress to calculate a Task Attention Level. This helps users distinguish between tasks that require high, medium, or low attention while preserving the original course, task, progress, and status-management workflow.
 
@@ -181,9 +181,13 @@ Basic verification flow:
 Additional Milestone 2 verification includes:
 
 - Strong password validation during registration
-- Automated backend tests
+- Automated Task Attention Level and password-validation tests
+- API-level integration testing for the main user flows
+- Backend regression testing
 - Backend test coverage verification
 - Authentication and authorization controls
 - User-specific Course and Academic Task ownership
 - Input validation
 - Task Attention Level calculation
+- Progress and status normalization
+- Cross-viewport verification at desktop, medium-width, and mobile viewport sizes

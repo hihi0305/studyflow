@@ -245,9 +245,25 @@ Generate the backend coverage report:
 npm run test:coverage
 ```
 
-Milestone 2 automated testing includes verification of Task Attention Level logic and password-validation behavior.
+Milestone 2 automated testing includes:
 
-The test command should complete without failing tests. The coverage command should print a coverage summary in the terminal.
+- Task Attention Level unit testing
+- Password-validation unit testing
+- API-level integration testing for the main StudyFlow user flows
+- Authentication verification
+- Course CRUD verification
+- Academic Task CRUD verification
+- Course-to-Task association verification
+- Progress and status normalization
+- Task Attention Level API verification
+- User-specific data isolation
+
+The complete backend regression suite was verified with 17 tests passing and 0 failures.
+
+The coverage report should print a coverage summary in the terminal. During Milestone 2 verification, `passwordValidation.js` and `taskAttention.js` retained 100% line, branch, and function coverage.
+
+The full backend codebase is not expected to have 100% coverage; the higher coverage target is focused on the deterministic Milestone 2 business-logic utilities.
+
 
 ## 9. Install and Start the Frontend
 
@@ -310,7 +326,7 @@ Verify the Milestone 1 workflow and the completed Milestone 2 functionality usin
    - progress
    - status
 10. Optionally associate the Academic Task with the Course.
-11. Confirm that the active task displays its calculated Task Attention Level.
+11. Confirm that the active task has a calculated Task Attention Level.
 12. Edit the Academic Task and update its progress and status.
 13. Set progress between 1% and 99% while the task is still Not Started and confirm that the task is normalized to In Progress.
 14. Mark the task as Completed and confirm that progress is normalized to 100%.
@@ -320,7 +336,8 @@ Verify the Milestone 1 workflow and the completed Milestone 2 functionality usin
 18. Log in again and confirm that the saved Course and Academic Task data is still available.
 19. Run the backend automated tests with `npm test`.
 20. Generate the backend coverage report with `npm run test:coverage`.
-21. Delete the Academic Task and Course and confirm that the interface updates correctly.
+21. Confirm that the application remains usable at representative desktop, medium-width, and mobile browser viewport sizes.
+22. Delete the Academic Task and Course and confirm that the interface updates correctly.
 
 
 ## 12. Expected Milestone 2 Behavior
@@ -339,11 +356,12 @@ The following functionality should operate successfully:
 - Completed task normalization to 100%
 - Dashboard summary updates
 - Task Attention Level calculation
-- Backend automated tests
+- Backend automated unit and integration tests
 - Backend coverage generation
+- Authentication, authorization, and input-validation controls
 - PostgreSQL persistence
 - Persistence after refresh and re-login
-- Responsive browser interface
+- Responsive browser interface across representative viewport sizes
 
 
 ## 13. Common Windows Setup Problems
