@@ -18,6 +18,7 @@ router.get("/", async (req, res) => {
           t.priority,
           t.progress,
           t.status,
+		  t.estimated_hours AS "estimatedHours",
           t.course_id AS "courseId",
           c.course_number AS "courseNumber"
         FROM academic_tasks t
