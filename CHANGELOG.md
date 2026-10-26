@@ -49,6 +49,9 @@ All notable changes to StudyFlow are documented in this file.
 - Verified authentication, Course CRUD, Academic Task CRUD, Course association, Task Attention Level API data, progress/status normalization, and user-specific data isolation
 - Verified the complete backend regression suite with 17 tests passing and 0 failures
 - Generated backend coverage after integration testing; `passwordValidation.js` and `taskAttention.js` retained 100% line, branch, and function coverage
+- Completed cross-viewport verification at 1440 × 900, 1024 × 768, and 390 × 844
+- Verified navigation, Dashboard, Academic Tasks, Courses, authentication forms, task creation, progress indicators, and responsive layouts across representative viewport sizes
+- Verified that no critical unintended horizontal overflow or overlapping UI elements were observed
 
 ### Documentation
 
@@ -61,12 +64,13 @@ All notable changes to StudyFlow are documented in this file.
 
 ### Remaining Milestone 2 Work
 
-- Task Attention Level frontend visualization
-- Search and filtering
-- Improved progress visualization
-- Cross-viewport / cross-platform verification
-- README and setup/verification updates
+- Task Attention Level frontend visualization integration
+- Search and filtering integration
+- Improved progress visualization integration
+- Optional additional cross-browser / cross-platform verification
+- Final README and setup/verification synchronization after frontend integration
 - Final regression testing
 - Demo preparation
 - Final contribution statements
+- Second Milestone 2 checkpoint release
 - Final `milestone-2` release tag
