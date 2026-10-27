@@ -61,7 +61,7 @@ export function TaskList() {
     ? tasks.filter((task) => {
         if (!task) return false;
 
-        // 1. Search Query (Title, Description, Course Number, Task Type, User Priority)
+        // 1. Search Query
         const query = (searchQuery || "").toLowerCase().trim();
         const title = String(task.title || task.name || "").toLowerCase();
         const description = String(task.description || "").toLowerCase();
@@ -85,7 +85,7 @@ export function TaskList() {
         
         let matchesCourseNumber = true;
         if (selectedCourseNumber === "NO_COURSE") {
-          matchesCourseNumber = !rawTaskCourse; // Matches tasks where course is missing or empty
+          matchesCourseNumber = !rawTaskCourse;
         } else if (selectedCourseNumber) {
           matchesCourseNumber = rawTaskCourse === selectedCourseNumber;
         }
@@ -93,11 +93,11 @@ export function TaskList() {
         // 3. Status Filter
         const matchesStatus = !selectedStatus || task.status === selectedStatus;
 
-        // 4. User Priority Filter (User-defined)
+        // 4. User Priority Filter
         const matchesPriority =
           !selectedPriority || task.priority === selectedPriority;
 
-        // 5. Task Attention Level Filter (Dynamically calculated via taskAttention.js)
+        // 5. Task Attention Level Filter
         const attentionResult = calculateTaskAttention(task);
         const calculatedAttentionLevel = attentionResult?.attentionLevel || "";
         const matchesAttention =
@@ -112,6 +112,27 @@ export function TaskList() {
         );
       })
     : [];
+
+  // Sort weight: High TAL (4) -> Medium TAL (3) -> Low TAL (2) -> Completed (1)
+  const getAttentionSortRank = (task) => {
+    if (task?.status === "Completed") return 1;
+    const attention = calculateTaskAttention(task);
+    switch (attention?.attentionLevel) {
+      case "High":
+        return 4;
+      case "Medium":
+        return 3;
+      case "Low":
+        return 2;
+      default:
+        return 0;
+    }
+  };
+
+  // Sort filtered tasks by Task Attention Level
+  const sortedFilteredTasks = [...filteredTasks].sort(
+    (a, b) => getAttentionSortRank(b) - getAttentionSortRank(a)
+  );
 
   // Reset all filters
   const handleResetFilters = () => {
@@ -209,7 +230,7 @@ export function TaskList() {
       {/* Search & Filter Toolbar */}
       {!isLoading && tasks.length > 0 && (
         <div className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200 space-y-3">
-          {/* Top Row: Search Bar Input */}
+          {/* Search Bar Input */}
           <div className="relative">
             <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -234,9 +255,9 @@ export function TaskList() {
             )}
           </div>
 
-          {/* Bottom Row: 4 Filter Dropdowns Grid */}
+          {/* Filter Dropdowns Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
-            {/* Filter 1: Course Number (with "No Course" option) */}
+            {/* Filter 1: Course Number */}
             <div>
               <label htmlFor="filter-course-number" className="block text-xs font-semibold text-gray-600 mb-1">
                 Course Number
@@ -277,7 +298,7 @@ export function TaskList() {
               </select>
             </div>
 
-            {/* Filter 3: User Priority (Explicit Label) */}
+            {/* Filter 3: User Priority */}
             <div>
               <label htmlFor="filter-user-priority" className="block text-xs font-semibold text-gray-600 mb-1">
                 User Priority
@@ -295,7 +316,7 @@ export function TaskList() {
               </select>
             </div>
 
-            {/* Filter 4: Task Attention Level (Explicit Label & Dynamic Calculation) */}
+            {/* Filter 4: Task Attention Level */}
             <div>
               <label htmlFor="filter-task-attention-level" className="block text-xs font-semibold text-gray-600 mb-1">
                 Task Attention Level
@@ -318,7 +339,7 @@ export function TaskList() {
           {hasActiveFilters && (
             <div className="flex items-center justify-between pt-2 border-t border-gray-200 text-xs">
               <span className="text-gray-500">
-                Showing <strong className="text-gray-800">{filteredTasks.length}</strong> of{" "}
+                Showing <strong className="text-gray-800">{sortedFilteredTasks.length}</strong> of{" "}
                 <strong className="text-gray-800">{tasks.length}</strong> tasks
               </span>
               <button
@@ -352,7 +373,7 @@ export function TaskList() {
             + Add Task
           </button>
         </div>
-      ) : filteredTasks.length === 0 ? (
+      ) : sortedFilteredTasks.length === 0 ? (
         <div className="rounded-lg border border-dashed border-gray-300 p-8 text-center bg-gray-50">
           <h3 className="text-sm font-medium text-gray-900">No tasks match your active search or filters</h3>
           <p className="mt-1 text-xs text-gray-500">Try adjusting your search keywords or clearing filter dropdowns.</p>
@@ -366,7 +387,7 @@ export function TaskList() {
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {filteredTasks.map((task) => (
+          {sortedFilteredTasks.map((task) => (
             <TaskCard
               key={task.id || task.task_id}
               task={task}
