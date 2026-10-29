@@ -326,7 +326,7 @@ Verify the Milestone 1 workflow and the completed Milestone 2 functionality usin
    - progress
    - status
 10. Optionally associate the Academic Task with the Course.
-11. Confirm that the active task has a calculated Task Attention Level.
+11. Confirm that the active task displays its calculated Task Attention Level.
 12. Edit the Academic Task and update its progress and status.
 13. Set progress between 1% and 99% while the task is still Not Started and confirm that the task is normalized to In Progress.
 14. Mark the task as Completed and confirm that progress is normalized to 100%.
@@ -362,6 +362,11 @@ The following functionality should operate successfully:
 - PostgreSQL persistence
 - Persistence after refresh and re-login
 - Responsive browser interface across representative viewport sizes
+- Task Attention Level visualization
+- Consistent Task Attention Level results across Dashboard and Academic Tasks
+- Attention-based Dashboard ordering
+- Task search and filtering
+- Improved task progress visualization
 
 
 ## 13. Common Windows Setup Problems

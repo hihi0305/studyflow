@@ -10,7 +10,7 @@ College students often manage multiple deadlines across several courses. Traditi
 
 StudyFlow combines course and academic task management with deadline, estimated work hours, user-defined priority, and progress information in a centralized dashboard.
 
-The Milestone 2 version of StudyFlow builds on the Milestone 1 end-to-end MVP by adding Task Attention Level calculation, stronger password validation, expanded automated and integration testing, security verification, cross-viewport verification, and supporting documentation.
+The Milestone 2 version of StudyFlow builds on the Milestone 1 end-to-end MVP by adding Task Attention Level calculation and visualization, task search and filtering, improved progress and dashboard presentation, stronger password validation, expanded automated and integration testing, security verification, cross-viewport verification, and supporting documentation.
 
 StudyFlow now evaluates active academic tasks using due date, estimated work hours, user-defined priority, and progress to calculate a Task Attention Level. This helps users distinguish between tasks that require high, medium, or low attention while preserving the original course, task, progress, and status-management workflow.
 
@@ -30,14 +30,16 @@ StudyFlow now evaluates active academic tasks using due date, estimated work hou
 - Persistent database storage
 - User-specific data access
 - Task Attention Level calculation
+- Task Attention Level visualization
+- Task search and filtering
+- Improved task progress visualization
+- Attention-based Dashboard task ordering
 - Stronger registration password validation
 - Automated backend testing and coverage verification
 - Security controls for authentication, authorization, ownership, and input validation
 
 ### Planned Later Features
 
-- Search and filtering
-- Improved progress visualization
 - Workload-based task recommendations
 - Calendar or timeline view
 - Academic workload analytics
@@ -176,7 +178,7 @@ No seed script or shared demonstration account is required for Milestone 2. A te
 
 Basic verification flow:
 
-`Register → Login → Create Course → Create Academic Task → Verify Task Attention Level → Update Progress / Status → View Dashboard → Logout → Login Again → Verify Persisted Data`
+`Register → Login → Create Course → Create Academic Task → Verify Task Attention Level → Search / Filter Tasks → Update Progress / Status → View Dashboard → Logout → Login Again → Verify Persisted Data`
 
 Additional Milestone 2 verification includes:
 
@@ -191,3 +193,8 @@ Additional Milestone 2 verification includes:
 - Task Attention Level calculation
 - Progress and status normalization
 - Cross-viewport verification at desktop, medium-width, and mobile viewport sizes
+- Task Attention Level visualization on the Dashboard and Academic Tasks page
+- Consistent Task Attention Level results across Dashboard and Academic Tasks
+- Attention-based Dashboard ordering
+- Task search and filtering
+- Improved progress visualization

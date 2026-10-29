@@ -14,12 +14,16 @@ All notable changes to StudyFlow are documented in this file.
 - Added Milestone 2 QA plan
 - Added OWASP Top 10 review
 - Added Milestone 2 development workflow documentation
+- Added Task Attention Level visualization to Dashboard and Academic Task cards
+- Added task search and filtering by Course, Status, User Priority, and Task Attention Level
 
 ### Changed
 
 - Improved Dashboard task information visibility
 - Updated StudyFlow logo navigation to route correctly to the Dashboard
 - Strengthened registration password requirements
+- Improved task progress visualization on the Dashboard and Academic Tasks page
+- Added attention-based Dashboard ordering: High → Medium → Low → Completed
 
 ### Fixed
 
@@ -27,6 +31,7 @@ All notable changes to StudyFlow are documented in this file.
 - Fixed missing user-defined priority display on Dashboard task cards
 - Fixed missing progress display on Dashboard task cards
 - Fixed incorrect StudyFlow logo navigation behavior
+- Fixed inconsistent Task Attention Level results between the Dashboard and Academic Tasks page by including estimated hours in Dashboard task data
 
 ### Security
 
@@ -64,12 +69,9 @@ All notable changes to StudyFlow are documented in this file.
 
 ### Remaining Milestone 2 Work
 
-- Task Attention Level frontend visualization integration
-- Search and filtering integration
-- Improved progress visualization integration
+- Academic Task page attention-based ordering improvement
 - Optional additional cross-browser / cross-platform verification
-- Final README and setup/verification synchronization after frontend integration
-- Final regression testing
+- Final regression testing after remaining frontend ordering work
 - Demo preparation
 - Final contribution statements
 - Second Milestone 2 checkpoint release
