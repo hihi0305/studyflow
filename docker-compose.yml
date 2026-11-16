@@ -1,0 +1,54 @@
+services:
+  # Database Service
+  db:
+    image: postgres:15-alpine
+    container_name: studyflow-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword
+      POSTGRES_DB: studyflow_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./server/migrations:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d studyflow_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Backend REST API Service
+  server:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: studyflow-server
+    environment:
+      NODE_ENV: production
+      PORT: 5000
+      DATABASE_URL: postgresql://postgres:postgrespassword@db:5432/studyflow_db
+      # DB_HOST: db
+      # DB_PORT: 5432
+      # DB_USER: postgres
+      # DB_PASSWORD: postgrespassword
+      # DB_NAME: studyflow_db
+    ports:
+      - "5000:5000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  # Frontend Client Service
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: studyflow-client
+    ports:
+      - "5173:80"
+    depends_on:
+      - server
+
+volumes:
+  pgdata:
