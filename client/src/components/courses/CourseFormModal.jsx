@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export function CourseFormModal({
   isOpen,
@@ -7,22 +7,28 @@ export function CourseFormModal({
   initialData = null,
   isLoading = false,
 }) {
-  const [courseNumber, setCourseNumber] = useState("");
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    if (!isOpen) return;
-
-    if (initialData) {
-      setCourseNumber(initialData.courseNumber || "");
-    } else {
-      setCourseNumber("");
-    }
-
-    setError("");
-  }, [isOpen, initialData]);
-
   if (!isOpen) return null;
+
+  return (
+    <CourseFormModalContent
+      onClose={onClose}
+      onSubmit={onSubmit}
+      initialData={initialData}
+      isLoading={isLoading}
+    />
+  );
+}
+
+function CourseFormModalContent({
+  onClose,
+  onSubmit,
+  initialData,
+  isLoading,
+}) {
+  const [courseNumber, setCourseNumber] = useState(
+    initialData?.courseNumber || ""
+  );
+  const [error, setError] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
