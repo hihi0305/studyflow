@@ -53,6 +53,9 @@ jobs:
       - name: Install backend dependencies
         working-directory: server
         run: npm ci
+      - name: Run backend lint
+        working-directory: server
+        run: npm run lint
 
       - name: Run backend tests
         working-directory: server
