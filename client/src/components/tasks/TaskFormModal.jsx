@@ -1,75 +1,81 @@
 import { useState, useEffect } from "react";
 import { courseService } from "../../services/courseService";
 
-export function TaskFormModal({ isOpen, onClose, onSubmit, initialData = null, isLoading = false }) {
+export function TaskFormModal({
+  isOpen,
+  onClose,
+  onSubmit,
+  initialData = null,
+  isLoading = false
+}) {
+  if (!isOpen) return null;
+
+  return (
+    <TaskFormModalContent
+      onClose={onClose}
+      onSubmit={onSubmit}
+      initialData={initialData}
+      isLoading={isLoading}
+    />
+  );
+}
+
+function TaskFormModalContent({
+  onClose,
+  onSubmit,
+  initialData,
+  isLoading,
+}) {
   const [courses, setCourses] = useState([]);
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    course_id: "",
-    due_date: "",
-    task_type: "Assignment",
-    priority: "Medium",
-    estimated_hours: 1,
-    progress: 0,
-    status: "Not Started",
-  });
+
+  const [formData, setFormData] = useState(() => ({
+    title: initialData?.title || "",
+    description: initialData?.description || "",
+    course_id: initialData?.course_id || initialData?.courseId || "",
+    due_date:
+      (initialData?.dueDate || initialData?.due_date)?.substring(0, 10) || "",
+    task_type: initialData?.task_type || initialData?.taskType || "Assignment",
+    priority: initialData?.priority || "Medium",
+    estimated_hours:
+      initialData?.estimated_hours || initialData?.estimatedHours || 1,
+    progress: initialData?.progress ?? 0,
+    status: initialData?.status || "Not Started",
+  }));
+
   const [error, setError] = useState("");
 
-  // Load courses for the dropdown when the modal opens
+  // Load available courses when the form is mounted.
   useEffect(() => {
-    if (isOpen) {
-      loadCourses();
-    }
-  }, [isOpen]);
+    let cancelled = false;
 
-  // Populate form if initialData is provided (edit mode), or reset to defaults
-  useEffect(() => {
-    if (initialData) {
-      setFormData({
-        title: initialData.title || "",
-        description: initialData.description || "",
-        course_id: initialData.course_id || initialData.courseId || "",
-        due_date: (initialData.dueDate || initialData.due_date)?.substring(0, 10) || "",
-        task_type: initialData.task_type || initialData.taskType || "Assignment",
-        priority: initialData.priority || "Medium",
-        estimated_hours: initialData.estimated_hours || initialData.estimatedHours || 1,
-        progress: initialData.progress ?? 0,
-        status: initialData.status || "Not Started",
+    courseService
+      .getCourses()
+      .then((data) => {
+        if (cancelled) return;
+
+        const courseList = Array.isArray(data)
+          ? data
+          : data?.courses || [];
+
+        setCourses(courseList);
+
+        // Select the first course by default only in Create mode.
+        if (!initialData && courseList.length > 0) {
+          setFormData((prev) =>
+            prev.course_id
+              ? prev
+              : { ...prev, course_id: courseList[0].id }
+          );
+        }
+      })
+      .catch((err) => {
+        console.error("Failed to load courses for task form:", err);
       });
-    } else {
-      setFormData({
-        title: "",
-        description: "",
-        course_id: "",
-        due_date: "",
-        task_type: "Assignment",
-        priority: "Medium",
-        estimated_hours: 1,
-        progress: 0,
-        status: "Not Started",
-      });
-    }
-    setError("");
-  }, [initialData, isOpen]);
 
-  const loadCourses = async () => {
-    try {
-      const data = await courseService.getCourses();
-      const courseList = Array.isArray(data) ? data : data.courses || [];
-      setCourses(courseList);
-
-      // Default to the first available course if adding a new task
-      if (!initialData && courseList.length > 0 && !formData.course_id) {
-        setFormData((prev) => ({
-          ...prev,
-          course_id: courseList[0].id,
-        }));
-      }
-    } catch (err) {
-      console.error("Failed to load courses for task form:", err);
-    }
-  };
+	return () => {
+	  cancelled = true;
+    };
+  }, [initialData]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -146,7 +152,6 @@ export function TaskFormModal({ isOpen, onClose, onSubmit, initialData = null, i
     onSubmit(payload);
   };
 
-  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto bg-black/50 p-3 sm:items-center sm:p-4">

@@ -16,7 +16,7 @@ function authenticateToken(req, res, next) {
 
     req.userId = payload.userId;
     next();
-  } catch (error) {
+  } catch {
     return res.status(401).json({
       error: { message: "Invalid or expired authentication token." },
     });

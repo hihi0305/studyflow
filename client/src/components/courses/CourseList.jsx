@@ -14,10 +14,34 @@ export function CourseList() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [courseToDelete, setCourseToDelete] = useState(null);
 
+
   // Load courses on component mount
   useEffect(() => {
-    loadCourses();
+    let cancelled = false;
+
+    courseService
+      .getCourses()
+      .then((data) => {
+        if (!cancelled) {
+          setCourses(Array.isArray(data) ? data : data.courses || []);
+        }
+      })
+      .catch((err) => {
+        if (!cancelled) {
+          setError(err.message || "Could not load courses.");
+        }
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setIsLoading(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
+
 
   const loadCourses = async () => {
     setIsLoading(true);
