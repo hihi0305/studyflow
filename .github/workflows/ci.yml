@@ -1,0 +1,89 @@
+name: StudyFlow CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  backend-tests:
+    name: Backend Tests
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:18-alpine
+        env:
+          POSTGRES_USER: studyflow
+          POSTGRES_PASSWORD: ci_test_password
+          POSTGRES_DB: studyflow_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U studyflow -d studyflow_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      DATABASE_URL: postgres://studyflow:ci_test_password@localhost:5432/studyflow_test
+      JWT_SECRET: ci-only-test-signing-key-not-for-production
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: server/package-lock.json
+
+      - name: Apply database migrations
+        run: |
+          for migration in server/migrations/*.sql; do
+            echo "Applying $migration"
+            docker exec -i "${{ job.services.postgres.id }}" \
+              psql -U studyflow -d studyflow_test -v ON_ERROR_STOP=1 \
+              < "$migration"
+          done
+
+      - name: Install backend dependencies
+        working-directory: server
+        run: npm ci
+      - name: Run backend lint
+        working-directory: server
+        run: npm run lint
+
+      - name: Run backend tests with coverage
+        working-directory: server
+        run: npm run test:coverage
+
+  frontend-build:
+    name: Frontend Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+          cache-dependency-path: client/package-lock.json
+
+      - name: Install frontend dependencies
+        working-directory: client
+        run: npm ci
+
+      - name: Run frontend lint
+        working-directory: client
+        run: npm run lint
+
+      - name: Build frontend
+        working-directory: client
+        run: npm run build

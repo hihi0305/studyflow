@@ -24,7 +24,30 @@ export function TaskList() {
 
   // Fetch tasks on component mount
   useEffect(() => {
-    fetchTasks();
+    let cancelled = false;
+
+    taskService
+      .getTasks()
+      .then((data) => {
+        if (!cancelled) {
+          const list = Array.isArray(data) ? data : data?.tasks || [];
+          setTasks(list);
+        }
+      })
+      .catch((err) => {
+        if (!cancelled) {
+          setError(err.message || "Failed to load tasks.");
+        }
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setIsLoading(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const fetchTasks = async () => {

@@ -273,6 +273,55 @@ test("StudyFlow main API integration flow", async () => {
     assert.equal(createdTask.attentionLevel, "High");
 
     // ------------------------------------------------------------
+    // Dashboard API: authentication, summary, and user isolation
+    // ------------------------------------------------------------
+
+    // Unauthenticated users cannot access the dashboard.
+    response = await request(app).get("/api/dashboard");
+    assert.equal(response.status, 401);
+
+    // User A can see the task created earlier.
+    response = await request(app)
+      .get("/api/dashboard")
+      .set(auth(tokenA));
+
+    assert.equal(response.status, 200);
+    assert.ok(response.body.summary);
+    assert.ok(Array.isArray(response.body.tasks));
+
+    const dashboardTask = response.body.tasks.find(
+      (task) => task.id === taskId
+    );
+
+    assert.ok(dashboardTask);
+    assert.equal(dashboardTask.title, "Integration High TAL Task");
+    assert.equal(dashboardTask.courseId, courseId);
+    assert.equal(dashboardTask.courseNumber, "CS 415 UPDATED");
+
+    const { totalTasks, activeTasks, completedTasks } =
+      response.body.summary;
+
+    assert.equal(totalTasks, response.body.tasks.length);
+    assert.equal(activeTasks + completedTasks, totalTasks);
+    assert.equal(
+      completedTasks,
+      response.body.tasks.filter(
+        (task) => task.status === "Completed"
+      ).length
+    );
+
+    // User B cannot see User A's task.
+    response = await request(app)
+      .get("/api/dashboard")
+      .set(auth(tokenB));
+
+    assert.equal(response.status, 200);
+    assert.equal(
+      response.body.tasks.some((task) => task.id === taskId),
+      false
+    );
+
+    // ------------------------------------------------------------
     // 6. User-specific Task isolation
     // ------------------------------------------------------------
 

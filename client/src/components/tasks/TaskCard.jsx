@@ -53,7 +53,6 @@ const getUserPriorityBadgeClass = (priority) => {
 
 export function TaskCard({ task, onEdit, onDelete }) {
   const {
-    id,
     title,
     description,
     course,
