@@ -122,6 +122,58 @@ The Milestone 2 version of StudyFlow was developed and verified using:
 - npm 10.8.2
 - PostgreSQL 18.6
 
+### Docker Quick Start (Recommended)
+
+Docker Compose provides a reproducible local environment with three services: a React frontend served by Nginx, an Express backend, and PostgreSQL 18.
+
+**Requirements:** Docker Desktop with Docker Compose.
+
+From the project root, copy `.env.example` to `.env` and replace the placeholder values with two different, securely generated secrets.
+
+```dotenv
+POSTGRES_PASSWORD=<strong-random-password>
+JWT_SECRET=<long-random-secret>
+```
+
+Use different randomly generated values for each variable. Do not commit the `.env` file or share its contents.
+
+Build and start the application:
+
+```bash
+docker compose up -d --build
+```
+
+Open the application at **http://localhost:8080**.
+
+The frontend is served by Nginx, which forwards `/api` requests to the internal Express backend on port 4000. PostgreSQL runs in a separate container without publishing its database port to the host.
+
+On first initialization of a new PostgreSQL data volume, the four SQL migrations in `server/migrations` run in filename order. They are not automatically reapplied to an existing volume.
+
+Verify the running services:
+
+```bash
+docker compose ps
+curl http://localhost:8080/api/health
+```
+
+The health endpoint should return `{"status":"ok","message":"StudyFlow API is running"}`. PostgreSQL should report a healthy status.
+
+To stop and remove the containers while preserving database data:
+
+```bash
+docker compose down
+```
+
+To restart:
+
+```bash
+docker compose up -d
+```
+
+The PostgreSQL named volume preserves user, Course, and Academic Task data across container recreation. Avoid `docker compose down -v` unless intentionally deleting the database volume and its data.
+
+For backend regression tests, use the separately configured test database and run `npm test` from the `server` directory as documented below.
+
 ### Backend
 
 Install the backend dependencies and start development server:
