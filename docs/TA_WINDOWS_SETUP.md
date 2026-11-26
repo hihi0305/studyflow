@@ -1,9 +1,13 @@
-# StudyFlow Milestone 2
+# StudyFlow Milestone 3
 ## Windows Setup and Verification Guide for TA
 
-This guide assumes that Git, Node.js, npm, and PostgreSQL are not yet installed.
+This guide provides instructions for setting up, running, and verifying the StudyFlow application on Windows.
 
-StudyFlow Milestone 2 was developed and verified using:
+Docker Compose is the recommended setup method for Milestone 3 because it runs the frontend, backend, and PostgreSQL database together without requiring separate local installations of Node.js or PostgreSQL.
+
+A manual Windows setup method is also provided for development, testing, and troubleshooting.
+
+The manual Windows setup was previously verified using:
 
 - Node.js v20.20.2
 - npm 10.8.2
@@ -14,6 +18,101 @@ The application consists of:
 - React frontend
 - Node.js / Express backend
 - PostgreSQL database
+
+
+## Docker Quick Start (Recommended for Milestone 3)
+
+Docker Compose is the recommended method for running StudyFlow locally. It starts the React frontend, Express backend, and PostgreSQL 18 database without requiring separate local installations of Node.js or PostgreSQL.
+
+### Prerequisites
+
+Install Git for Windows and Docker Desktop with Docker Compose.
+
+Make sure Docker Desktop is running before executing the commands below.
+
+### Clone the Repository
+
+Open Windows Command Prompt and run:
+
+```cmd
+git clone https://github.com/hihi0305/studyflow.git
+cd studyflow
+```
+
+### Configure Environment Variables
+
+Create a local environment file from the repository template:
+
+```cmd
+copy .env.example .env
+notepad .env
+```
+
+Replace the placeholder values for `POSTGRES_PASSWORD` and `JWT_SECRET` with two different, securely generated secrets.
+
+Do not commit `.env` to Git or share its contents.
+
+### Build and Start StudyFlow
+
+From the project root, run:
+
+```cmd
+docker compose up -d --build
+```
+
+Docker Compose builds and starts the frontend, backend, and PostgreSQL services.
+
+On first initialization of a new PostgreSQL data volume, the four SQL migration files are executed automatically in filename order.
+
+### Verify the Application
+
+Check the running services:
+
+```cmd
+docker compose ps
+```
+
+PostgreSQL should report a healthy status.
+
+Verify the backend through the Nginx reverse proxy:
+
+```cmd
+curl http://localhost:8080/api/health
+```
+
+Expected response:
+
+```json
+{"status":"ok","message":"StudyFlow API is running"}
+```
+
+Open the frontend in a web browser:
+
+http://localhost:8080
+
+Register a new account, log in, create a Course and an Academic Task, and confirm that the Dashboard displays the saved information.
+
+### Stop and Restart
+
+Stop the application while preserving database data:
+
+```cmd
+docker compose down
+```
+
+Restart the existing containers:
+
+```cmd
+docker compose up -d
+```
+
+The PostgreSQL named volume preserves application data across ordinary container recreation.
+
+**Warning:** Do not run `docker compose down -v` unless you intentionally want to delete the database volume and its stored data.
+
+### Alternative: Manual Windows Setup
+
+The following sections describe how to install Node.js and PostgreSQL separately and run StudyFlow directly on Windows. This method is useful for development, automated testing, and troubleshooting.
 
 
 ## 1. Install Required Software
@@ -231,38 +330,70 @@ npm start
 
 ## 8. Run Backend Automated Tests
 
-Open a separate Command Prompt window and navigate to the `server` directory.
+StudyFlow uses a separate PostgreSQL test database for backend integration testing. Do not run integration tests against the regular `studyflow` development database because the tests may create or delete records.
 
-Run the backend automated tests:
+### 8.1 Create the Test Database
+
+Open Command Prompt and run:
 
 ```cmd
-npm test
+"C:\Program Files\PostgreSQL\18\bin\psql.exe" -U postgres -h localhost -p 5432 -c "CREATE DATABASE studyflow_test;"
 ```
 
-Generate the backend coverage report:
+Enter your PostgreSQL password when prompted.
+
+### 8.2 Apply Test Database Migrations
+
+Navigate to the `server` directory and apply the four migrations in order:
 
 ```cmd
+"C:\Program Files\PostgreSQL\18\bin\psql.exe" -U postgres -h localhost -p 5432 -d studyflow_test -v ON_ERROR_STOP=1 -f migrations\001_create_users.sql
+"C:\Program Files\PostgreSQL\18\bin\psql.exe" -U postgres -h localhost -p 5432 -d studyflow_test -v ON_ERROR_STOP=1 -f migrations\002_create_courses.sql
+"C:\Program Files\PostgreSQL\18\bin\psql.exe" -U postgres -h localhost -p 5432 -d studyflow_test -v ON_ERROR_STOP=1 -f migrations\003_create_academic_tasks.sql
+"C:\Program Files\PostgreSQL\18\bin\psql.exe" -U postgres -h localhost -p 5432 -d studyflow_test -v ON_ERROR_STOP=1 -f migrations\004_rename_course_name_to_course_number.sql
+```
+
+Each migration should complete successfully before proceeding to the next.
+
+### 8.3 Configure the Test Environment
+
+Create a separate `server/.env.test` file:
+
+```cmd
+notepad .env.test
+```
+
+Add the following settings:
+
+```dotenv
+DATABASE_URL=postgresql://postgres:YOUR_POSTGRES_PASSWORD@localhost:5432/studyflow_test
+JWT_SECRET=replace_with_a_private_test_secret
+```
+
+Replace the placeholder password with the actual local PostgreSQL password. If the password contains reserved URL characters, URL-encode those characters in the database connection string.
+
+Keep `.env.test` private and do not commit it to Git.
+
+### 8.4 Run Automated Tests and Coverage
+
+From the `server` directory, run:
+
+```cmd
+set "DATABASE_URL="
+npm run lint
+npm test
 npm run test:coverage
 ```
 
-Milestone 2 automated testing includes:
+Clearing `DATABASE_URL` in the current Command Prompt prevents an existing shell variable from overriding the test connection configured in `.env.test`.
 
-- Task Attention Level unit testing
-- Password-validation unit testing
-- API-level integration testing for the main StudyFlow user flows
-- Authentication verification
-- Course CRUD verification
-- Academic Task CRUD verification
-- Course-to-Task association verification
-- Progress and status normalization
-- Task Attention Level API verification
-- User-specific data isolation
+The backend test suite includes API integration tests, password-validation tests, and Task Attention Level unit tests.
 
-The complete backend regression suite was verified with 17 tests passing and 0 failures.
+During Milestone 3 local verification, all 17 automated tests passed with zero failures. The coverage report is printed in the terminal.
 
-The coverage report should print a coverage summary in the terminal. During Milestone 2 verification, `passwordValidation.js` and `taskAttention.js` retained 100% line, branch, and function coverage.
+A passing test run should report zero failures. Coverage percentages may change as source code and tests are updated.
 
-The full backend codebase is not expected to have 100% coverage; the higher coverage target is focused on the deterministic Milestone 2 business-logic utilities.
+If a PostgreSQL authentication error occurs, verify the test database, `.env.test` file, password, port, and connection string before rerunning the tests.
 
 
 ## 9. Install and Start the Frontend
@@ -296,9 +427,27 @@ Open the `Local` address shown by Vite in a web browser.
 Keep both the backend and frontend Command Prompt windows running.
 
 
+### 9.1 Frontend Code Quality Verification
+
+Milestone 3 introduces frontend ESLint and automated production build verification as part of the GitHub Actions CI pipeline.
+
+From the `client` directory, run:
+
+```cmd
+npm run lint
+npm run build
+```
+
+Both commands should complete successfully without errors.
+
+The lint command checks JavaScript and React Hooks rules. The build command verifies that Vite can produce the production frontend assets.
+
+These checks also run automatically in GitHub Actions for Pull Requests targeting `main`.
+
+
 ## 10. Seed Data and Demonstration Account
 
-No database seed script is required for Milestone 2.
+No database seed script is required for the current StudyFlow application.
 
 No shared demonstration account is required.
 
@@ -307,7 +456,7 @@ Create a new user through the StudyFlow registration page and create sample Cour
 
 ## 11. TA Verification Workflow
 
-Verify the Milestone 1 workflow and the completed Milestone 2 functionality using the following steps:
+Verify the core StudyFlow functionality using the following steps:
 
 1. Register a new user account.
 2. Confirm that weak passwords that do not satisfy the password requirements are rejected.
@@ -340,7 +489,7 @@ Verify the Milestone 1 workflow and the completed Milestone 2 functionality usin
 22. Delete the Academic Task and Course and confirm that the interface updates correctly.
 
 
-## 12. Expected Milestone 2 Behavior
+## 12. Expected Application Behavior
 
 The following functionality should operate successfully:
 

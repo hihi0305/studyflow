@@ -10,7 +10,7 @@ College students often manage multiple deadlines across several courses. Traditi
 
 StudyFlow combines course and academic task management with deadline, estimated work hours, user-defined priority, and progress information in a centralized dashboard.
 
-The Milestone 2 version of StudyFlow builds on the Milestone 1 end-to-end MVP by adding Task Attention Level calculation and visualization, task search and filtering, improved progress and dashboard presentation, stronger password validation, expanded automated and integration testing, security verification, cross-viewport verification, and supporting documentation.
+StudyFlow builds on its Milestone 1 end-to-end MVP and Milestone 2 feature enhancements, including Task Attention Level calculation, task search and filtering, improved Dashboard presentation, stronger password validation, and expanded testing. Milestone 3 further improves the application's reproducibility and code quality through Docker containerization, automated linting, integration testing, code coverage reporting, and GitHub Actions continuous integration.
 
 StudyFlow now evaluates active academic tasks using due date, estimated work hours, user-defined priority, and progress to calculate a Task Attention Level. This helps users distinguish between tasks that require high, medium, or low attention while preserving the original course, task, progress, and status-management workflow.
 
@@ -116,7 +116,7 @@ For a complete Windows installation and verification walkthrough, see the [Windo
 
 ### Required Software
 
-The Milestone 2 version of StudyFlow was developed and verified using:
+The manual Windows setup was previously verified using:
 
 - Node.js v20.20.2
 - npm 10.8.2
@@ -176,35 +176,53 @@ For backend regression tests, use the separately configured test database and ru
 
 ### Backend
 
-Install the backend dependencies and start development server:
+For manual backend execution, install the dependencies, configure the environment, and apply the database migrations before starting the server.
 
-```bash
+From the project root, navigate to the server directory:
+
+```cmd
 cd server
 npm install
-npm run dev
 ```
 
-Create a local `.env` file based on `.env.example` and configure `PORT`, `DATABASE_URL`, and `JWT_SECRET`.
+Create `server/.env` from `server/.env.example`:
 
-Apply the database migrations in order:
+```cmd
+copy .env.example .env
+notepad .env
+```
+
+Configure `PORT`, `DATABASE_URL`, and `JWT_SECRET` for your local PostgreSQL instance.
+
+This file is separate from the repository-root `.env` used by Docker Compose. Do not commit `.env` files or authentication secrets to Git.
+
+Create the studyflow PostgreSQL database and apply the migrations in order:
 
 1. `001_create_users.sql`
 2. `002_create_courses.sql`
 3. `003_create_academic_tasks.sql`
 4. `004_rename_course_name_to_course_number.sql`
 
-No additional database migration is required for the current Milestone 2 Task Attention Level or password-validation changes because these features do not modify the database schema.
+For the complete PostgreSQL database creation and migration commands, see the [Windows TA Setup and Verification Guide](docs/TA_WINDOWS_SETUP.md).
 
-Run the backend automated tests:
+No additional database migration is required for the existing Task Attention Level or password-validation functionality because these features do not modify the database schema.
 
-```bash
-cd server
+After configuring the environment and applying the migrations, start the backend:
+
+```cmd
+npm run dev
+```
+
+Run the backend automated tests from a separate Command Prompt opened in the `server` directory. These tests require the separate `studyflow_test` database and `server/.env.test` configuration described in the TA guide.
+
+```cmd
+set "DATABASE_URL="
 npm test
 ```
 
 Generate the backend test coverage report:
 
-```bash
+```cmd
 npm run test:coverage
 ```
 
@@ -224,9 +242,38 @@ A production frontend build can be generated with:
 npm run build
 ```
 
+### Continuous Integration (Milestone 3)
+
+StudyFlow uses GitHub Actions to automatically validate code changes through backend and frontend checks.
+
+The CI workflow runs on Pull Requests targeting `main` and includes:
+
+- **Backend Tests:** PostgreSQL integration testing, backend ESLint, automated tests, and code coverage reporting.
+- **Frontend Build:** Frontend ESLint and Vite production build verification.
+
+To run the backend checks locally, open a terminal in the `server` directory:
+
+```bash
+npm run lint
+npm run test:coverage
+```
+
+To run the frontend checks locally, open a terminal in the `client` directory:
+
+```bash
+npm run lint
+npm run build
+```
+
+The backend integration tests require a separate PostgreSQL test database and a correctly configured `server/.env.test` file. See the Windows TA Setup and Verification Guide for detailed test environment setup instructions.
+
+GitHub Actions results are available in the repository's Actions tab and on the corresponding Pull Requests.
+
+The workflow is configured to execute automatically. Mandatory status-check enforcement through GitHub branch protection will be configured and verified before the final release.
+
 ### Verification
 
-No seed script or shared demonstration account is required for Milestone 2. A tester can register a new account and create sample Course and Academic Task data through the application.
+No seed script or shared demonstration account is required for the current StudyFlow application. A tester can register a new account and create sample Course and Academic Task data through the application.
 
 Basic verification flow:
 
