@@ -14,6 +14,11 @@ All notable changes to StudyFlow are documented in this file.
 - Added automated backend and frontend ESLint checks.
 - Added backend code coverage reporting to the CI workflow.
 - Added Dashboard API integration tests for summary behavior and user-specific data isolation.
+- Deployed the React frontend, Express backend, and PostgreSQL 18 database to Render.
+- Configured the frontend production API URL and backend CORS support for public hosting.
+- Configured a Render Static Site rewrite rule to support direct navigation to React Router routes.
+- Added a GitHub Actions continuous deployment workflow to trigger Render deployments after successful CI on `main` (pending PR merge and end-to-end verification).
+- Added a Milestone 3 Risk Register covering deployment, security, database reliability, and maintenance risks (pending PR merge).
 
 ### Changed
 
@@ -36,6 +41,13 @@ All notable changes to StudyFlow are documented in this file.
 - Increased Dashboard source-file line coverage from 20.63% to 90.48% through additional integration testing.
 - Completed six Course-management and nine Academic Task frontend regression checks successfully.
 - Confirmed independent team-member verification of the Docker environment and local backend tests.
+- Verified the public backend health endpoint and all four PostgreSQL migrations.
+- Verified registration, login, Course and Academic Task operations, and Dashboard updates in the hosted application.
+- Confirmed data persistence after logout and login.
+- Verified automatic progress normalization to 100% when a task is marked Completed.
+- Confirmed zero known vulnerabilities in frontend and backend production dependencies using `npm audit --omit=dev`.
+- Created a PostgreSQL backup and successfully restored it to an isolated PostgreSQL 18.7 Docker database.
+- Verified the restored database schema, constraints, and record counts.
 
 ### Documentation
 
@@ -45,10 +57,11 @@ All notable changes to StudyFlow are documented in this file.
 
 ### Remaining Milestone 3 Work
 
+- Complete PR reviews and merge the production deployment configuration, CD workflow, and final documentation.
+- Align Render frontend and backend deployment branches with `main`.
+- Verify that successful GitHub Actions CI triggers Render deployments.
 - Configure and verify required CI status checks and Pull Request review protection.
-- Deploy the public frontend, backend, and PostgreSQL environment.
-- Implement and verify the automated continuous deployment pipeline.
-- Complete production regression testing and deployment metrics.
+- Collect final deployment metrics and regression evidence.
 - Finalize README, TA verification instructions, and demonstration evidence.
 - Create the `milestone-3` tag and `v1.0` GitHub Release.
 - Complete the final paper, demonstration, and contribution statements.
