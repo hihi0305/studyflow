@@ -2,6 +2,18 @@
 
 StudyFlow is a web-based academic planning application designed to help college students organize courses, assignments, exams, and projects while identifying academic tasks that may require immediate attention.
 
+## Live Deployment
+
+StudyFlow is publicly hosted on Render.
+
+- **Frontend:** https://studyflow-nhpt.onrender.com
+- **Backend Health Check:** https://studyflow-api-m8ij.onrender.com/api/health
+- **Hosting:** Render Static Site (React), Render Web Service (Express), and Render PostgreSQL 18
+
+To verify the deployed application, open the frontend URL, register a new account, log in, create a Course and an Academic Task, and confirm that the Dashboard reflects the saved information.
+
+**Note:** Render's free services may take additional time to respond after inactivity. The free PostgreSQL instance is currently scheduled to expire on December 25, 2026.
+
 ## Problem
 
 College students often manage multiple deadlines across several courses. Traditional calendars and task lists can show what needs to be completed, but they provide limited support for evaluating workload, progress, and which task should receive attention first.
