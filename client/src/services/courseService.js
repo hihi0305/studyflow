@@ -1,6 +1,6 @@
 import { authService } from './authService';
 
-const API_BASE_URL = '/api';
+import { API_BASE_URL } from "./apiConfig";
 
 const getAuthHeaders = () => {
   const token = authService.getToken();

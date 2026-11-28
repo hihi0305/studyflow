@@ -1,4 +1,4 @@
-const API_BASE_URL = '/api';
+import { API_BASE_URL } from "./apiConfig";
 const TOKEN_KEY = 'studyflow_access_token';
 
 export const authService = {
