@@ -16,7 +16,7 @@ Likelihood and impact are assessed qualitatively as Low, Medium, or High. Risk s
 | ID | Risk | Likelihood | Impact | Mitigation / Response | Status |
 |---|---|---|---|---|---|
 | R-01 | Render free PostgreSQL expiration may make the deployed application unavailable. | High | High | The free database is scheduled to expire on December 25, 2026. Complete the final demonstration before expiration and plan for database renewal or migration if continued hosting is required. | Open |
-| R-02 | Database data may be lost because a verified backup and recovery process is not yet documented. | Medium | High | Prepare a PostgreSQL backup procedure, store backups securely, and verify restoration to a separate database before relying on the backup. | Open |
+| R-02 | Database data may be lost if backups are unavailable or cannot be restored. | Medium | High | Created a PostgreSQL custom-format backup using `pg_dump` and successfully restored it to an isolated PostgreSQL 18.7 Docker database. Verified the restored tables, constraints, and record counts. Continue taking secure backups and periodically testing restoration. | Mitigated / Monitoring |
 | R-03 | Deployment may fail or publish code that has not passed automated checks. | Medium | High | Use GitHub Actions to run backend tests, lint, coverage, and frontend build checks. Trigger Render deployment only after successful CI on `main`. Align both Render services with `main` and verify the complete CD process. | In Progress |
 | R-04 | Changes may be merged without required CI results or independent review. | Medium | High | Configure GitHub branch protection to require successful CI checks and one reviewer approval. Test that failing checks block merging and that an approved, passing PR can be merged. | Open |
 | R-05 | Vulnerabilities in development dependencies may affect local development or future builds. | Medium | Medium | Review npm audit reports, avoid unnecessary breaking upgrades, and track dependency updates. On November 28, both frontend and backend production-dependency audits reported zero known vulnerabilities, while development-dependency findings remained. | Monitoring |
@@ -40,8 +40,14 @@ The following activities were completed during Milestone 3:
 - Successfully deleted test Course and Task records.
 - Verified that frontend and backend production-dependency audits returned zero known vulnerabilities.
 - Created a GitHub Actions CD workflow and opened a Pull Request for review.
+- Created a production PostgreSQL backup on November 28, 2026, using `pg_dump`.
+- Verified the backup archive using `pg_restore --list`.
+- Successfully restored the backup to an isolated PostgreSQL 18.7 Docker database.
+- Confirmed that the restored database contained all three application tables and that record counts matched the expected test data: 1 user, 0 courses, and 0 academic tasks.
+- Removed the temporary restore container after verification while retaining the original backup file outside the Git repository.
 
-These checks demonstrate that the core hosted application is operational. They do not replace backup testing, branch-protection verification, or validation of the complete automated deployment pipeline.
+
+These checks demonstrate that the core hosted application is operational and that the database backup can be restored successfully. Branch-protection verification and validation of the complete automated deployment pipeline are still pending.
 
 ## 4. Remaining Mitigation Actions
 
@@ -51,7 +57,7 @@ Before the final release, the team should:
 2. Align Render's backend and frontend deployment branches with `main`.
 3. Verify that successful CI triggers the intended Render deployments.
 4. Configure and test required GitHub branch protection rules.
-5. Document the database backup and recovery procedure.
+5. Document the verified backup and restore commands for future maintenance and repeat the procedure periodically.
 6. Record unresolved development-dependency vulnerabilities and future maintenance recommendations.
 7. Recheck the public application after the final deployment.
 
