@@ -153,7 +153,7 @@ Verify the running services:
 
 ```bash
 docker compose ps
-curl http://localhost:8080/api/health
+curl.exe http://localhost:8080/api/health
 ```
 
 The health endpoint should return `{"status":"ok","message":"StudyFlow API is running"}`. PostgreSQL should report a healthy status.
@@ -275,7 +275,7 @@ The workflow is configured to execute automatically. Mandatory status-check enfo
 
 No seed script or shared demonstration account is required for the current StudyFlow application. A tester can register a new account and create sample Course and Academic Task data through the application.
 
-Basic verification flow:
+Recommended manual verification steps (for testers and TAs):
 
 `Register → Login → Create Course → Create Academic Task → Verify Task Attention Level → Search / Filter Tasks → Update Progress / Status → View Dashboard → Logout → Login Again → Verify Persisted Data`
 

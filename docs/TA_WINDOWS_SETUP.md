@@ -77,8 +77,10 @@ PostgreSQL should report a healthy status.
 Verify the backend through the Nginx reverse proxy:
 
 ```cmd
-curl http://localhost:8080/api/health
+curl.exe http://localhost:8080/api/health
 ```
+
+**PowerShell note:** On Windows PowerShell 5.1, `curl` is an alias for `Invoke-WebRequest`, which may display a security warning about script execution. Use `curl.exe` to invoke the actual curl executable and avoid this warning. This command also works in Windows Command Prompt.
 
 Expected response:
 
