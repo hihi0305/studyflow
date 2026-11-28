@@ -2,7 +2,58 @@
 
 All notable changes to StudyFlow are documented in this file.
 
-## Milestone 2 — In Progress
+## Milestone 3 — In Progress
+
+### Added
+
+- Added Docker containerization for the React frontend, Express backend, and PostgreSQL database.
+- Added Docker Compose configuration for reproducible local application setup.
+- Added multi-stage frontend Docker build with Nginx serving production assets and proxying `/api` requests.
+- Added backend Docker configuration and PostgreSQL 18 database initialization with persistent storage.
+- Added GitHub Actions continuous integration for backend and frontend validation.
+- Added automated backend and frontend ESLint checks.
+- Added backend code coverage reporting to the CI workflow.
+- Added Dashboard API integration tests for summary behavior and user-specific data isolation.
+
+### Changed
+
+- Improved frontend React components to comply with ESLint and React Hooks rules.
+- Improved asynchronous data loading and form-state initialization while preserving existing Course and Academic Task functionality.
+- Expanded Docker setup instructions and environment configuration guidance in the README.
+- Improved the Windows TA Setup and Verification Guide with Docker execution and separate PostgreSQL test database instructions.
+
+### Fixed
+
+- Resolved frontend linting issues involving unused variables, React Hooks dependencies, and state management.
+- Addressed the local integration-test configuration issue identified during independent Windows verification by documenting the required `.env.test` file and `studyflow_test` database.
+
+### Testing
+
+- Verified the Docker Compose environment with frontend, backend, and PostgreSQL services.
+- Verified API health checks, database initialization, and data persistence across container recreation.
+- Verified GitHub Actions **Backend Tests** and **Frontend Build** jobs successfully.
+- Verified the backend regression suite with 17 passing tests and zero failures.
+- Increased Dashboard source-file line coverage from 20.63% to 90.48% through additional integration testing.
+- Completed six Course-management and nine Academic Task frontend regression checks successfully.
+- Confirmed independent team-member verification of the Docker environment and local backend tests.
+
+### Documentation
+
+- Added Docker setup and troubleshooting guidance to the README.
+- Expanded Windows TA verification instructions for Milestone 3.
+- Documented CI verification commands, test database configuration, and environment-variable requirements.
+
+### Remaining Milestone 3 Work
+
+- Configure and verify required CI status checks and Pull Request review protection.
+- Deploy the public frontend, backend, and PostgreSQL environment.
+- Implement and verify the automated continuous deployment pipeline.
+- Complete production regression testing and deployment metrics.
+- Finalize README, TA verification instructions, and demonstration evidence.
+- Create the `milestone-3` tag and `v1.0` GitHub Release.
+- Complete the final paper, demonstration, and contribution statements.
+
+## Milestone 2
 
 ### Added
 
@@ -67,7 +118,7 @@ All notable changes to StudyFlow are documented in this file.
 - Added branching, commit, PR, review, and merge workflow documentation
 - Updated Milestone 2 README and Windows TA setup/verification documentation
 
-### Remaining Milestone 2 Work
+### Outstanding Items Recorded at the End of Milestone 2
 
 - Academic Task page attention-based ordering improvement
 - Optional additional cross-browser / cross-platform verification
